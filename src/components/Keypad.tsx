@@ -13,57 +13,27 @@ interface ButtonConfig {
   span?: number
 }
 
-type ButtonVariants = {
-  number: string
-  operator: string
-  function: string
-  equals: string
-  clear: string
-  scientific: string
-}
-
 function getButtonStyles(
   variant: ButtonConfig['variant'],
-  theme: 'light' | 'dark',
-  isSci: boolean,
+  isLight: boolean,
 ): string {
-  const base = `
-    w-full h-14 rounded-xl text-lg font-medium
-    transition-all duration-150
-    active:scale-95 active:opacity-80
-    select-none cursor-pointer
-    shadow-sm
-    hover:brightness-110
-  `
+  const base = `glass-btn w-full h-14 text-base md:text-lg`
 
-  const lightVariants: ButtonVariants = {
-    number: 'bg-white text-gray-800 hover:bg-gray-50 border border-gray-200',
-    operator: 'bg-orange-100 text-orange-600 hover:bg-orange-200 border border-orange-200',
-    function: 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200',
-    equals: 'bg-orange-500 text-white hover:bg-orange-600 border border-orange-500',
-    clear: 'bg-red-100 text-red-500 hover:bg-red-200 border border-red-200',
-    scientific: isSci
-      ? 'bg-purple-500 text-white hover:bg-purple-600 border border-purple-500'
-      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200',
+  const variantMap: Record<ButtonConfig['variant'], string> = {
+    number: isLight ? 'glass-btn-number-light' : 'glass-btn-number-dark',
+    operator: isLight ? 'glass-btn-operator-light' : 'glass-btn-operator-dark',
+    function: isLight ? 'glass-btn-function-light' : 'glass-btn-function-dark',
+    equals: isLight ? 'glass-btn-equals-light' : 'glass-btn-equals-dark',
+    clear: isLight ? 'glass-btn-clear-light' : 'glass-btn-clear-dark',
+    scientific: isLight ? 'glass-btn-sci-light' : 'glass-btn-sci-dark',
   }
 
-  const darkVariants: ButtonVariants = {
-    number: 'bg-gray-700 text-white hover:bg-gray-600 border border-gray-600',
-    operator: 'bg-orange-900/40 text-orange-400 hover:bg-orange-900/60 border border-orange-800/50',
-    function: 'bg-gray-600 text-gray-300 hover:bg-gray-500 border border-gray-500',
-    equals: 'bg-orange-500 text-white hover:bg-orange-600 border border-orange-500',
-    clear: 'bg-red-900/40 text-red-400 hover:bg-red-900/60 border border-red-800/50',
-    scientific: isSci
-      ? 'bg-purple-500 text-white hover:bg-purple-600 border border-purple-500'
-      : 'bg-gray-600 text-gray-300 hover:bg-gray-500 border border-gray-500',
-  }
-
-  const variants = theme === 'light' ? lightVariants : darkVariants
-  return `${base} ${variants[variant]}`
+  return `${base} ${variantMap[variant]}`
 }
 
 export default function Keypad({ dispatch }: KeypadProps) {
   const { theme } = useTheme()
+  const isLight = theme === 'light'
   const [showScientific, setShowScientific] = useState(false)
 
   const digit = (d: string) => () => dispatch({ type: 'INPUT_DIGIT', digit: d })
@@ -122,26 +92,33 @@ export default function Keypad({ dispatch }: KeypadProps) {
       <button
         onClick={() => setShowScientific(!showScientific)}
         className={`
-          w-full py-2 mb-3 rounded-xl text-sm font-medium transition-all duration-200
+          w-full py-2.5 mb-3 rounded-2xl text-sm font-semibold tracking-wide
+          transition-all duration-300
+          glass-btn
           ${showScientific
-            ? 'bg-purple-500/20 text-purple-600 dark:text-purple-400'
-            : theme === 'light'
-              ? 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-              : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+            ? (isLight
+              ? 'glass-btn-sci-light bg-purple-500/15'
+              : 'glass-btn-sci-dark')
+            : (isLight
+              ? 'glass-btn-function-light'
+              : 'glass-btn-function-dark')
           }
         `}
       >
-        {showScientific ? '🔬 收起科学计算' : '🔬 展开科学计算'}
+        <span className="flex items-center justify-center gap-2">
+          <span>{showScientific ? '🔬' : '🔬'}</span>
+          <span>{showScientific ? '收起科学计算' : '展开科学计算'}</span>
+        </span>
       </button>
 
       {/* Scientific grid */}
       {showScientific && (
-        <div className="grid grid-cols-4 gap-2 mb-3">
+        <div className="grid grid-cols-4 gap-2.5 mb-3">
           {scientificButtons.map((btn) => (
             <button
               key={btn.label}
               onClick={btn.action}
-              className={getButtonStyles(btn.variant, theme, showScientific)}
+              className={`${getButtonStyles(btn.variant, isLight)} text-xs font-mono`}
             >
               {btn.label}
             </button>
@@ -150,12 +127,16 @@ export default function Keypad({ dispatch }: KeypadProps) {
       )}
 
       {/* Basic grid */}
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-2.5">
         {basicButtons.map((btn) => (
           <button
             key={btn.label + btn.variant}
             onClick={btn.action}
-            className={getButtonStyles(btn.variant, theme, showScientific)}
+            className={
+              getButtonStyles(btn.variant, isLight) +
+              (btn.variant === 'number' ? ' font-semibold' : '') +
+              (btn.variant === 'equals' ? ' text-xl tracking-wider' : '')
+            }
           >
             {btn.label}
           </button>
