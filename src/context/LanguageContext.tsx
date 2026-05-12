@@ -84,7 +84,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(getInitialLang)
 
   const setLang = (l: Lang) => {
-    console.log('[LanguageProvider.setLang]', l, '(prev:', lang, ')')
     setLangState(l)
     localStorage.setItem('calculator-lang', l)
   }

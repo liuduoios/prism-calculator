@@ -31,7 +31,7 @@ function CalculatorContent() {
       <div className="orb orb-4" />
 
       {/* Header */}
-      <header className={`relative z-10 px-6 py-4 flex items-center justify-between
+      <header className={`relative z-20 px-6 py-4 h-16 flex items-center justify-between overflow-visible
         ${isLight
           ? 'bg-white/40 backdrop-blur-md border-b border-white/40'
           : 'bg-gray-900/40 backdrop-blur-md border-b border-white/5'
