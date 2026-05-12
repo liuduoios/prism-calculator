@@ -1,4 +1,5 @@
 import { useTheme } from '../context/ThemeContext'
+import { useTranslation } from '../context/LanguageContext'
 import type { HistoryItem } from '../reducer/calculatorReducer'
 
 interface HistoryProps {
@@ -9,6 +10,7 @@ interface HistoryProps {
 
 export default function History({ history, onSelect, onClear }: HistoryProps) {
   const { theme } = useTheme()
+  const { t } = useTranslation()
   const isLight = theme === 'light'
 
   if (history.length === 0) {
@@ -22,7 +24,7 @@ export default function History({ history, onSelect, onClear }: HistoryProps) {
       `}>
         <div className="flex flex-col items-center gap-2 py-8">
           <span className="text-2xl">📝</span>
-          <span className="font-medium">暂无计算历史</span>
+          <span className="font-medium">{t('history.empty')}</span>
         </div>
       </div>
     )
@@ -36,7 +38,7 @@ export default function History({ history, onSelect, onClear }: HistoryProps) {
           ${isLight ? 'text-gray-600' : 'text-gray-300'}
         `}>
           <span>📋</span>
-          <span>计算历史</span>
+          <span>{t('history.title')}</span>
         </h3>
         <button
           onClick={onClear}
@@ -48,7 +50,7 @@ export default function History({ history, onSelect, onClear }: HistoryProps) {
             hover:!text-red-500 hover:!border-red-300/40
           `}
         >
-          清空
+          {t('history.clear')}
         </button>
       </div>
 
