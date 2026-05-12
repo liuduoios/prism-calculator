@@ -31,7 +31,7 @@ function CalculatorContent() {
       <div className="orb orb-4" />
 
       {/* Header */}
-      <header className={`relative z-20 px-8 py-4 h-16 flex items-center justify-between overflow-visible
+      <header className={`relative z-20 px-6 py-4 h-16 flex items-center justify-between overflow-visible
         ${isLight
           ? 'bg-white/40 backdrop-blur-md border-b border-white/40'
           : 'bg-gray-900/40 backdrop-blur-md border-b border-white/5'
@@ -85,7 +85,7 @@ function CalculatorContent() {
       </main>
 
       {/* Footer */}
-      <footer className={`relative z-10 pt-4 pb-8 px-8 text-center text-xs font-medium tracking-wide
+      <footer className={`relative z-10 pt-4 pb-6 px-8 text-center text-xs font-medium tracking-wide
         ${isLight ? 'text-purple-300/70' : 'text-gray-600'}`}
       >
         <p>&copy; {new Date().getFullYear()} {t('app.title')} &mdash; {t('app.footer')}</p>
