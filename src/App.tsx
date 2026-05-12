@@ -45,7 +45,7 @@ function CalculatorContent() {
             {t('app.title')}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 pr-1">
           <LanguageToggle />
           <ThemeToggle />
         </div>
@@ -85,7 +85,7 @@ function CalculatorContent() {
       </main>
 
       {/* Footer */}
-      <footer className={`relative z-10 py-4 text-center text-xs font-medium tracking-wide
+      <footer className={`relative z-10 py-5 px-6 text-center text-xs font-medium tracking-wide
         ${isLight ? 'text-purple-300/70' : 'text-gray-600'}`}
       >
         <p>&copy; {new Date().getFullYear()} {t('app.title')} &mdash; {t('app.footer')}</p>
