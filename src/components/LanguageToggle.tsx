@@ -90,7 +90,14 @@ export default function LanguageToggle() {
               key={l}
               type="button"
               role="menuitem"
-              onClick={() => { setLang(l); setOpen(false) }}
+              onMouseDown={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                const langCode = l
+                console.log('[LanguageToggle] selecting:', langCode, 'current:', lang)
+                setLang(langCode)
+                setOpen(false)
+              }}
               className={`
                 w-full text-left px-3.5 py-2 text-xs font-medium
                 transition-colors duration-150
