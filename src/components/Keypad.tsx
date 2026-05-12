@@ -88,42 +88,56 @@ export default function Keypad({ dispatch }: KeypadProps) {
 
   return (
     <div>
-      {/* Scientific toggle */}
+      {/* Scientific toggle — refined glass chip style */}
       <button
         onClick={() => setShowScientific(!showScientific)}
         className={`
-          w-full py-2.5 mb-3 rounded-2xl text-sm font-semibold tracking-wide
+          w-full flex items-center justify-center gap-2.5
+          py-2 px-4 mb-5 rounded-full text-xs font-semibold tracking-wider
           transition-all duration-300
           glass-btn
+          ${isLight
+            ? 'glass-btn-function-light'
+            : 'glass-btn-function-dark'
+          }
           ${showScientific
             ? (isLight
-              ? 'glass-btn-sci-light bg-purple-500/15'
-              : 'glass-btn-sci-dark')
-            : (isLight
-              ? 'glass-btn-function-light'
-              : 'glass-btn-function-dark')
+              ? '!bg-purple-100/60 !border-purple-300/40 !text-purple-600'
+              : '!bg-purple-500/10 !border-purple-400/20 !text-purple-400')
+            : ''
           }
         `}
       >
-        <span className="flex items-center justify-center gap-2">
-          <span>{showScientific ? '🔬' : '🔬'}</span>
-          <span>{showScientific ? '收起科学计算' : '展开科学计算'}</span>
+        {/* Icon */}
+        <span className={`text-sm transition-transform duration-300 ${showScientific ? 'rotate-45' : ''}`}>
+          ▸
+        </span>
+        <span>{showScientific ? '收起科学计算' : '展开科学计算'}</span>
+        <span className={`text-xs opacity-60 ${showScientific ? 'order-first -rotate-45' : ''}`}>
+          fn
         </span>
       </button>
 
       {/* Scientific grid */}
       {showScientific && (
-        <div className="grid grid-cols-4 gap-2.5 mb-3">
-          {scientificButtons.map((btn) => (
-            <button
-              key={btn.label}
-              onClick={btn.action}
-              className={`${getButtonStyles(btn.variant, isLight)} text-xs font-mono`}
-            >
-              {btn.label}
-            </button>
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-4 gap-2.5 mb-3">
+            {scientificButtons.map((btn) => (
+              <button
+                key={btn.label}
+                onClick={btn.action}
+                className={`${getButtonStyles(btn.variant, isLight)} text-xs font-mono h-11`}
+              >
+                {btn.label}
+              </button>
+            ))}
+          </div>
+          {/* Divider */}
+          <div className={`
+            w-full h-px mb-5 rounded-full
+            ${isLight ? 'bg-black/8' : 'bg-white/8'}
+          `} />
+        </>
       )}
 
       {/* Basic grid */}
