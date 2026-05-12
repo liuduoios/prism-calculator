@@ -10,8 +10,8 @@ interface LanguageContextType {
 
 const translations: Record<string, Record<Lang, string>> = {
   'app.title': {
-    zh: '精美计算器',
-    en: 'Glass Calculator',
+    zh: '浮光计算器',
+    en: 'Prism Calculator',
   },
   'app.footer': {
     zh: 'Glassmorphism 设计',
