@@ -8,6 +8,7 @@ import Keypad from './components/Keypad'
 import History from './components/History'
 import ThemeToggle from './components/ThemeToggle'
 import LanguageToggle from './components/LanguageToggle'
+import { Inspector } from 'react-dev-inspector'
 
 function CalculatorContent() {
   const { theme } = useTheme()
@@ -18,7 +19,9 @@ function CalculatorContent() {
   const isLight = theme === 'light'
 
   return (
-    <div className={`min-h-screen flex flex-col transition-all duration-500 relative overflow-hidden
+    <>
+      <Inspector />
+      <div className={`min-h-screen flex flex-col transition-all duration-500 relative overflow-hidden
       ${isLight
         ? 'bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50'
         : 'bg-gradient-to-br from-gray-950 via-slate-900 to-gray-900'
@@ -91,6 +94,7 @@ function CalculatorContent() {
         <p>&copy; {new Date().getFullYear()} {t('app.title')} &mdash; {t('app.footer')}</p>
       </footer>
     </div>
+    </>
   )
 }
 
