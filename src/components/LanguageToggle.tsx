@@ -1,41 +1,22 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { createPortal } from 'react-dom'
 import { useTranslation, langOrder, langLabel } from '../context/LanguageContext'
 
 export default function LanguageToggle() {
   const { lang, setLang } = useTranslation()
   const [open, setOpen] = useState(false)
-  const [pos, setPos] = useState({ top: 0, left: 0 })
-  const btnRef = useRef<HTMLButtonElement>(null)
-  const menuRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const close = useCallback(() => setOpen(false), [])
 
-  // Reposition dropdown on open / scroll / resize
-  useEffect(() => {
-    if (!open) return
-    const update = () => {
-      if (btnRef.current) {
-        const rect = btnRef.current.getBoundingClientRect()
-        setPos({ top: rect.bottom + 6, left: rect.right })
-      }
-    }
-    update()
-    window.addEventListener('scroll', update, true)
-    window.addEventListener('resize', update)
-    return () => {
-      window.removeEventListener('scroll', update, true)
-      window.removeEventListener('resize', update)
-    }
-  }, [open])
-
-  // Outside-click close (capture phase so it fires first)
+  // Close on outside click via native mousedown capture
   useEffect(() => {
     if (!open) return
     const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) close()
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        close()
+      }
     }
-    // Delay listener so the button click that opened it isn't immediately caught
+    // delay to avoid closing on the very click that opened it
     const t = setTimeout(() => document.addEventListener('mousedown', handler, true), 0)
     return () => {
       clearTimeout(t)
@@ -43,14 +24,17 @@ export default function LanguageToggle() {
     }
   }, [open, close])
 
-  const toggle = () => setOpen(v => !v)
+  const handleSelect = (l: typeof lang) => {
+    console.log('[LanguageToggle.handleSelect]', l, 'current:', lang)
+    setLang(l)
+    setOpen(false)
+  }
 
   return (
-    <>
+    <div ref={containerRef} className="relative">
       <button
-        ref={btnRef}
         type="button"
-        onClick={toggle}
+        onClick={() => setOpen(v => !v)}
         className={`
           relative h-8 px-3 rounded-full
           transition-all duration-300
@@ -70,33 +54,27 @@ export default function LanguageToggle() {
         <span className={`text-[8px] transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>▼</span>
       </button>
 
-      {open && createPortal(
+      {open && (
         <div
-          ref={menuRef}
-          role="menu"
           className={`
-            fixed py-1 min-w-[120px]
-            rounded-xl overflow-hidden
+            absolute right-0 top-full mt-1.5 py-1 min-w-[120px]
+            rounded-xl overflow-hidden z-[9999]
             backdrop-blur-xl
             ${lang === 'en'
-              ? 'bg-white/70 border border-white/60 shadow-lg shadow-black/5'
-              : 'bg-gray-800/80 border border-white/10 shadow-lg shadow-black/20'
+              ? 'bg-white/80 border border-white/60 shadow-xl shadow-black/5'
+              : 'bg-gray-800/80 border border-white/10 shadow-xl shadow-black/20'
             }
           `}
-          style={{ top: pos.top, left: pos.left - 120 }}
         >
           {langOrder.map((l) => (
             <button
               key={l}
               type="button"
-              role="menuitem"
               onMouseDown={(e) => {
+                // Use native event to bypass any React synthetic event issues
                 e.preventDefault()
                 e.stopPropagation()
-                const langCode = l
-                console.log('[LanguageToggle] selecting:', langCode, 'current:', lang)
-                setLang(langCode)
-                setOpen(false)
+                handleSelect(l)
               }}
               className={`
                 w-full text-left px-3.5 py-2 text-xs font-medium
@@ -104,8 +82,8 @@ export default function LanguageToggle() {
                 flex items-center gap-2
                 ${l === lang
                   ? (lang === 'en'
-                    ? 'bg-purple-100/70 text-purple-700'
-                    : 'bg-purple-500/15 text-purple-300')
+                    ? 'bg-purple-100/80 text-purple-700'
+                    : 'bg-purple-500/20 text-purple-300')
                   : (lang === 'en'
                     ? 'text-gray-600 hover:bg-black/5'
                     : 'text-gray-300 hover:bg-white/5')
@@ -119,9 +97,8 @@ export default function LanguageToggle() {
               {l === lang && <span className="ml-auto text-[10px]">✓</span>}
             </button>
           ))}
-        </div>,
-        document.body
+        </div>
       )}
-    </>
+    </div>
   )
 }
