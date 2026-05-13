@@ -42,7 +42,11 @@ function getInitialStats(): ChallengeStats {
   return { score: 0, streak: 0, bestStreak: 0, totalCorrect: 0, totalWrong: 0, level: 1 }
 }
 
-export default function ChallengeMode() {
+interface ChallengeModeProps {
+  onBack?: () => void
+}
+
+export default function ChallengeMode({ onBack }: ChallengeModeProps) {
   const { theme } = useTheme()
   const [active, setActive] = useState(false)
   const [question, setQuestion] = useState<Question | null>(null)
@@ -54,6 +58,7 @@ export default function ChallengeMode() {
   const inputRef = useRef<HTMLInputElement>(null)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const hasStarted = useRef(false)
 
   const isNeon = theme === 'neon'
   const isRetro = theme === 'retro'
@@ -88,7 +93,12 @@ export default function ChallengeMode() {
       clearInterval(timerRef.current)
       timerRef.current = null
     }
-  }, [])
+    // Auto-return to calculator after delay
+    setTimeout(() => {
+      setShowResult(false)
+      onBack?.()
+    }, 4000)
+  }, [onBack])
 
   // Timer
   useEffect(() => {
@@ -187,19 +197,17 @@ export default function ChallengeMode() {
   const accentColor = isNeon ? 'text-cyan-300' : isRetro ? 'text-emerald-600' : isLightLike ? 'text-purple-600' : 'text-purple-400'
   const bgAccent = isNeon ? 'bg-cyan-500/10' : isRetro ? 'bg-emerald-100' : isLightLike ? 'bg-purple-50' : 'bg-purple-500/10'
 
+  // Auto-start game on mount (App handles the wrapper visibility)
+  useEffect(() => {
+    if (!hasStarted.current) {
+      hasStarted.current = true
+      startGame()
+    }
+  }, [startGame])
+
   if (!active && !showResult) {
     return (
-      <div className="mb-4">
-        <button
-          type="button"
-          onClick={startGame}
-          className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 glass-btn ${btnClass}`}
-        >
-          <span>🏆</span>
-          <span>口算挑战模式</span>
-          <span className="text-xs opacity-60">Beta</span>
-        </button>
-      </div>
+      <div className="text-center py-8 opacity-50 text-sm">加载中...</div>
     )
   }
 
@@ -225,7 +233,7 @@ export default function ChallengeMode() {
         <button
           type="button"
           onClick={startGame}
-          className={`mt-4 py-2 px-6 rounded-full text-sm font-bold transition-all duration-200 glass-btn ${btnClass}`}
+          className="mt-4 py-2 px-6 rounded-full text-sm font-bold transition-all duration-200 glass-btn ${btnClass}"
         >
           再来一局
         </button>

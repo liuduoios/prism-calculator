@@ -121,7 +121,11 @@ function saveStats(s: Stats) {
   localStorage.setItem('calc-24-stats', JSON.stringify(s))
 }
 
-export default function TwentyFourGame() {
+interface TwentyFourGameProps {
+  onBack?: () => void
+}
+
+export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
   const { theme } = useTheme()
   const [active, setActive] = useState(false)
   const [cards, setCards] = useState<Card[]>([])
@@ -136,6 +140,7 @@ export default function TwentyFourGame() {
   const [showHint, setShowHint] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const messageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const hasStarted = useRef(false)
 
   const isNeon = theme === 'neon'
   const isRetro = theme === 'retro'
@@ -188,7 +193,11 @@ export default function TwentyFourGame() {
     setStats(newStats)
     saveStats(newStats)
     setActive(false)
-  }, [stats, timer])
+    // Auto-return to calculator after delay
+    setTimeout(() => {
+      onBack?.()
+    }, 4000)
+  }, [stats, timer, onBack])
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -268,26 +277,22 @@ export default function TwentyFourGame() {
     endGame(false)
   }, [showMsg, endGame])
 
+  // Auto-start game on mount
+  useEffect(() => {
+    if (!hasStarted.current) {
+      hasStarted.current = true
+      startGame()
+    }
+  }, [startGame])
+
   if (!active) {
     return (
-      <button
-        type="button"
-        onClick={startGame}
-        className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 glass-btn ${btnClass}`}
-      >
-        <span>🃏</span>
-        <span>24点游戏</span>
-        {stats.attempted > 0 && (
-          <span className="text-xs opacity-60">
-            ({stats.solved}/{stats.attempted})
-          </span>
-        )}
-      </button>
+      <div className="text-center py-8 opacity-50 text-sm">加载中...</div>
     )
   }
 
   return (
-    <div className={`mb-4 rounded-2xl p-4 ${isLightLike ? 'bg-purple-50/60' : 'bg-purple-500/5'} border border-white/10`}>
+    <div className={isLightLike ? 'bg-purple-50/60' : 'bg-purple-500/5'}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 text-xs">

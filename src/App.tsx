@@ -1,4 +1,4 @@
-import { useReducer, useCallback } from 'react'
+import { useReducer, useCallback, useState } from 'react'
 import { ThemeProvider, useTheme } from './context/ThemeContext'
 import { LanguageProvider, useTranslation } from './context/LanguageContext'
 import { calculatorReducer, initialState } from './reducer/calculatorReducer'
@@ -14,11 +14,15 @@ import EasterEgg from './components/EasterEgg'
 import ProgrammerMode from './components/ProgrammerMode'
 import ChallengeMode from './components/ChallengeMode'
 import TwentyFourGame from './components/TwentyFourGame'
+
+type ActiveMode = 'calculator' | 'challenge' | '24game'
+
 function CalculatorContent() {
   const { theme } = useTheme()
   const { t } = useTranslation()
   const [state, dispatchRaw] = useReducer(calculatorReducer, initialState)
   const { playSound, vibrate } = useSoundFeedback()
+  const [activeMode, setActiveMode] = useState<ActiveMode>('calculator')
 
   // Wrap dispatch with sound + haptic feedback
   const dispatch = useCallback((action: CalculatorAction) => {
@@ -96,57 +100,110 @@ function CalculatorContent() {
         </div>
       </header>
 
-      {/* Main — three-column layout */}
+      {/* Main — layout switches based on activeMode */}
       <main className="relative z-10 flex-1 flex items-center justify-center p-4 md:p-6">
-        <div className="flex gap-5 w-full max-w-[1100px] justify-center items-start">
 
-          {/* Column 1: Mode Toolbar (challenge, programmer toggles) */}
+        {/* ═══ CHALLENGE MODE — full screen ═══ */}
+        {activeMode === 'challenge' && (
           <div className={`
-            hidden md:flex flex-col gap-3 w-52 p-5
+            w-full max-w-[520px] p-6
             glass-card
             ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
             ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
           `}>
-            <TwentyFourGame />
-            <ChallengeMode />
-            <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
+            <button
+              type="button"
+              onClick={() => setActiveMode('calculator')}
+              className="mb-4 text-sm font-medium opacity-50 hover:opacity-100 transition-opacity flex items-center gap-1"
+            >
+              <span>←</span> 返回计算器
+            </button>
+            <ChallengeMode onBack={() => setActiveMode('calculator')} />
           </div>
+        )}
 
-          {/* Mobile: mode toggles inside calculator card (visible below md) */}
-          <div className="md:hidden w-full max-w-[420px] flex flex-col gap-2">
-            <TwentyFourGame />
-            <ChallengeMode />
-            <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
-          </div>
-
-          {/* Column 2: Calculator Card */}
+        {/* ═══ 24 GAME MODE — full screen ═══ */}
+        {activeMode === '24game' && (
           <div className={`
-            w-full max-w-[420px] flex flex-col p-6
+            w-full max-w-[520px] p-6
             glass-card
             ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
             ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
           `}>
-            <Display
-              displayValue={state.displayValue}
-              expression={state.expression}
-            />
-            <Keypad dispatch={dispatch} />
+            <button
+              type="button"
+              onClick={() => setActiveMode('calculator')}
+              className="mb-4 text-sm font-medium opacity-50 hover:opacity-100 transition-opacity flex items-center gap-1"
+            >
+              <span>←</span> 返回计算器
+            </button>
+            <TwentyFourGame onBack={() => setActiveMode('calculator')} />
           </div>
+        )}
 
-          {/* Column 3: History Panel */}
-          <div className={`
-            hidden lg:flex flex-col w-72 p-6
-            glass-card
-            ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
-            ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
-          `}>
-            <History
-              history={state.history}
-              onSelect={(item) => dispatch({ type: 'SELECT_HISTORY', item })}
-              onClear={() => dispatch({ type: 'CLEAR_HISTORY' })}
-            />
+        {/* ═══ DEFAULT: Calculator Mode — three-column layout ═══ */}
+        {activeMode === 'calculator' && (
+          <div className="flex gap-5 w-full max-w-[1200px] justify-center items-stretch">
+
+            {/* Column 1: Mode Toolbar */}
+            <div className={`
+              hidden md:flex flex-col gap-3 w-64 p-5
+              glass-card
+              ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
+              ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
+            `}>
+              <div className="text-xs font-semibold tracking-wider opacity-40 uppercase mb-1 text-center">游戏模式</div>
+              <button
+                type="button"
+                onClick={() => setActiveMode('24game')}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 glass-btn glass-btn-function-light dark:glass-btn-function-dark"
+              >
+                <span>🃏</span><span>24点游戏</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveMode('challenge')}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 glass-btn glass-btn-function-light dark:glass-btn-function-dark"
+              >
+                <span>🏆</span><span>口算挑战</span>
+              </button>
+              <div className="text-xs font-semibold tracking-wider opacity-40 uppercase mb-1 mt-2 text-center">工具</div>
+              <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
+            </div>
+
+            {/* Mobile: mode toggles */}
+            <div className="md:hidden w-full max-w-[420px] flex flex-col gap-2">
+              <button type="button" onClick={() => setActiveMode('24game')} className="w-full py-2 rounded-full text-sm font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🃏 24点游戏</button>
+              <button type="button" onClick={() => setActiveMode('challenge')} className="w-full py-2 rounded-full text-sm font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🏆 口算挑战</button>
+              <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
+            </div>
+
+            {/* Column 2+3: Calculator + History (same height grid) */}
+            <div className="flex gap-5 w-full max-w-[740px] items-stretch">
+              <div className={`
+                flex-1 min-w-0 flex flex-col p-6
+                glass-card
+                ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
+                ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
+              `}>
+                <Display displayValue={state.displayValue} expression={state.expression} />
+                <Keypad dispatch={dispatch} />
+              </div>
+              <div className={`
+                hidden lg:flex flex-col w-72 p-6
+                glass-card
+                ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
+                ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
+              `}>
+                <History
+                  history={state.history}
+                  onSelect={(item) => dispatch({ type: 'SELECT_HISTORY', item })}
+                  onClear={() => dispatch({ type: 'CLEAR_HISTORY' })}
+                />
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </main>
 
       {/* Footer */}
