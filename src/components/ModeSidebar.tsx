@@ -1,6 +1,6 @@
 import { useTheme } from '../context/ThemeContext'
 import { useTranslation } from '../context/LanguageContext'
-import { themeClass, GLASS_CARD, GLASS_CARD_SHADOW, BTN_FUNCTION, BTN_AMBER_DARK } from '../utils/themeClasses'
+import { themeClass, GLASS_CARD, GLASS_CARD_SHADOW, BTN_FUNCTION, BTN_AMBER_DARK, SIDEBAR_LABEL_TEXT } from '../utils/themeClasses'
 
 type ActiveMode = 'calculator' | 'challenge' | '24game'
 
@@ -26,7 +26,7 @@ export default function ModeSidebar({ switchMode }: ModeSidebarProps) {
         ${themeClass(theme, GLASS_CARD_SHADOW)}
       `}
     >
-      <div className="text-xs font-semibold tracking-wider opacity-40 uppercase mb-1 text-center">
+      <div className={`text-xs font-semibold tracking-wider opacity-40 uppercase mb-1 text-center ${themeClass(theme, SIDEBAR_LABEL_TEXT)}`}>
         {t('game.mode') || '游戏模式'}
       </div>
 
@@ -48,7 +48,7 @@ export default function ModeSidebar({ switchMode }: ModeSidebarProps) {
         <span>口算挑战</span>
       </button>
 
-      <div className="text-xs font-semibold tracking-wider opacity-40 uppercase mb-1 mt-2 text-center">
+      <div className={`text-xs font-semibold tracking-wider opacity-40 uppercase mb-1 mt-2 text-center ${themeClass(theme, SIDEBAR_LABEL_TEXT)}`}>
         工具
       </div>
     </div>

@@ -115,6 +115,14 @@ export const LABEL_TEXT: Record<Theme, string> = {
   retro: 'text-emerald-600/50',
 }
 
+/** Sidebar section labels like "游戏模式" / "工具" */
+export const SIDEBAR_LABEL_TEXT: Record<Theme, string> = {
+  light: 'text-gray-400',
+  dark: 'text-gray-300',
+  neon: 'text-cyan-300/40',
+  retro: 'text-emerald-600/60',
+}
+
 export const BASE_TEXT: Record<Theme, string> = {
   light: 'text-gray-800',
   dark: 'text-gray-300',
