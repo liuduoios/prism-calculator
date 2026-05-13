@@ -173,14 +173,14 @@ function CalculatorContent() {
         {activeMode === 'calculator' && (
           <div className="flex gap-5 w-full max-w-[1200px] justify-center items-stretch">
 
-            {/* Column 1: Mode Toolbar */}
+            {/* Column 1: Mode Toolbar — desktop sidebar */}
             <div className={`
-              hidden md:flex flex-col gap-3 w-64 p-5
+              hidden xl:flex flex-col gap-3 w-56 p-5
               glass-card
               ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
               ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
             `}>
-              <div className="text-xs font-semibold tracking-wider opacity-40 uppercase mb-1 text-center">游戏模式</div>
+              <div className="text-xs font-semibold tracking-wider opacity-40 uppercase mb-1 text-center">{t('game.mode') || '游戏模式'}</div>
               <button
                 type="button"
                 onClick={() => switchMode('24game')}
@@ -199,11 +199,11 @@ function CalculatorContent() {
               <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
             </div>
 
-            {/* Mobile: mode toggles */}
-            <div className="md:hidden w-full max-w-[420px] flex flex-col gap-2">
-              <button type="button" onClick={() => switchMode('24game')} className="w-full py-2 rounded-full text-sm font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🃏 24点游戏</button>
-              <button type="button" onClick={() => switchMode('challenge')} className="w-full py-2 rounded-full text-sm font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🏆 口算挑战</button>
-              <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
+            {/* Mobile: compact mode toggles — tiny row */}
+            <div className="lg:hidden w-full max-w-[420px] flex items-center gap-1.5 mb-1">
+              <button type="button" onClick={() => switchMode('24game')} className="flex-1 h-9 rounded-full text-[11px] font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🃏 24点</button>
+              <button type="button" onClick={() => switchMode('challenge')} className="flex-1 h-9 rounded-full text-[11px] font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🏆 口算</button>
+              <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} compact />
             </div>
 
             {/* Column 2+3: Calculator + History (same height grid) */}
@@ -218,7 +218,7 @@ function CalculatorContent() {
                 <Keypad dispatch={dispatch} />
               </div>
               <div className={`
-                hidden lg:flex flex-col w-72 p-6
+                hidden xl:flex flex-col w-72 p-6
                 glass-card
                 ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
                 ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
