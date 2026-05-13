@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { useTheme } from '../context/ThemeContext'
-import { themeClass, GLASS_CARD, GLASS_CARD_SHADOW } from '../utils/themeClasses'
+import { themeClass, GLASS_CARD, GLASS_CARD_SHADOW, SIDEBAR_LABEL_TEXT } from '../utils/themeClasses'
 
 interface ModeWrapperProps {
   onBack: () => void
@@ -26,7 +26,7 @@ export default function ModeWrapper({ onBack, children }: ModeWrapperProps) {
       <button
         type="button"
         onClick={onBack}
-        className="mb-4 text-sm font-medium opacity-50 hover:opacity-100 transition-opacity flex items-center gap-1"
+        className={`mb-4 text-sm font-medium opacity-50 hover:opacity-100 transition-opacity flex items-center gap-1 ${themeClass(theme, SIDEBAR_LABEL_TEXT)}`}
       >
         <span>←</span> 返回计算器
       </button>
