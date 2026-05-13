@@ -70,14 +70,14 @@ export default function ProgrammerMode({ displayValue, dispatch }: ProgrammerMod
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className={`w-full flex items-center justify-center gap-2 py-1.5 px-4 mb-3 rounded-full text-xs font-semibold tracking-wider transition-all duration-300 glass-btn ${btnClass}`}
+        className={`w-full flex items-center justify-center gap-2 py-1.5 px-4 mb-1 rounded-full text-xs font-semibold tracking-wider transition-all duration-300 glass-btn ${btnClass}`}
       >
         <span>💻</span>
         <span>{expanded ? '收起程序员模式' : '程序员模式'}</span>
       </button>
 
       {expanded && (
-        <div className={`rounded-2xl p-4 space-y-1.5 text-xs font-mono ${baseClass}`}>
+        <div className={`rounded-2xl p-4 mt-3 space-y-1.5 text-xs font-mono ${baseClass}`}>
           {/* Binary & Hex display */}
           <div className="flex justify-between">
             <span className={labelClass}>HEX</span>
