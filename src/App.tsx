@@ -13,6 +13,7 @@ import LanguageToggle from './components/LanguageToggle'
 import EasterEgg from './components/EasterEgg'
 import ProgrammerMode from './components/ProgrammerMode'
 import ChallengeMode from './components/ChallengeMode'
+import TwentyFourGame from './components/TwentyFourGame'
 function CalculatorContent() {
   const { theme } = useTheme()
   const { t } = useTranslation()
@@ -106,12 +107,14 @@ function CalculatorContent() {
             ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
             ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
           `}>
+            <TwentyFourGame />
             <ChallengeMode />
             <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
           </div>
 
           {/* Mobile: mode toggles inside calculator card (visible below md) */}
           <div className="md:hidden w-full max-w-[420px] flex flex-col gap-2">
+            <TwentyFourGame />
             <ChallengeMode />
             <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
           </div>
