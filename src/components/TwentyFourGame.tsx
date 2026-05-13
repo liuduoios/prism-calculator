@@ -153,7 +153,15 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
       ? 'glass-btn-function-retro'
       : isLightLike
         ? 'glass-btn-function-light'
-        : 'glass-btn-function-dark'
+        : 'glass-btn amber-btn-dark'
+
+  const bgCard = isNeon
+    ? 'bg-cyan-500/10 border border-cyan-500/20'
+    : isRetro
+      ? 'bg-emerald-50/80 border border-emerald-200'
+      : isLightLike
+        ? 'bg-purple-50/60'
+        : 'bg-amber-500/5'
 
   const showMsg = useCallback((msg: string, type: 'success' | 'error' | 'info') => {
     setMessage(msg)
@@ -295,12 +303,12 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
   }
 
   return (
-    <div className={isLightLike ? 'bg-purple-50/60' : 'bg-purple-500/5'}>
+    <div className={bgCard}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 text-xs">
           <span className="font-bold">🃏 24点</span>
-          <span className={isNeon ? 'text-cyan-400' : 'text-purple-500'}>
+          <span className={isNeon ? 'text-cyan-400' : isRetro ? 'text-emerald-600' : isLightLike ? 'text-purple-500' : 'text-amber-300'}>
             ⏱ {timer}s
           </span>
           {stats.bestTime > 0 && (
@@ -330,16 +338,16 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
               text-2xl font-bold font-mono
               transition-all duration-200
               ${card.used
-                ? (isLightLike ? 'bg-gray-100 text-gray-300' : 'bg-gray-800/30 text-gray-600')
+                ? (isLightLike ? 'bg-gray-100 text-gray-300' : isRetro ? 'bg-emerald-100/50 text-emerald-300' : isNeon ? 'bg-cyan-500/5 text-cyan-600/30' : 'bg-amber-500/5 text-amber-600/30')
                 : selectedCards.includes(i)
-                  ? (isNeon ? 'bg-cyan-500/30 text-cyan-200 ring-2 ring-cyan-400' : 'bg-purple-100 text-purple-700 ring-2 ring-purple-400')
+                  ? (isNeon ? 'bg-cyan-500/30 text-cyan-200 ring-2 ring-cyan-400' : isRetro ? 'bg-emerald-200 text-emerald-800 ring-2 ring-emerald-500' : isLightLike ? 'bg-purple-100 text-purple-700 ring-2 ring-purple-400' : 'bg-amber-500/20 text-amber-200 ring-2 ring-amber-400')
                   : (isNeon
                     ? 'glass-btn-number-neon cursor-pointer hover:scale-105'
                     : isRetro
                       ? 'glass-btn-number-retro cursor-pointer hover:scale-105'
                       : isLightLike
                         ? 'bg-white/80 border border-purple-200 cursor-pointer hover:bg-purple-50 hover:scale-105 text-purple-800'
-                        : 'glass-btn-number-dark cursor-pointer hover:scale-105')
+                        : 'glass-btn amber-btn-dark cursor-pointer hover:scale-105')
               }
             `}
           >
@@ -349,7 +357,7 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
       </div>
 
       {/* Current state display */}
-      <div className={`text-center mb-3 font-mono ${isLightLike ? 'text-gray-700' : 'text-gray-200'}`}>
+      <div className={`text-center mb-3 font-mono ${isNeon ? 'text-cyan-100' : isRetro ? 'text-emerald-800' : isLightLike ? 'text-gray-700' : 'text-amber-100'}`}>
         {currentValue !== null && (
           <span className="text-xl font-bold">{Math.round(currentValue * 1000) / 1000}</span>
         )}
@@ -373,7 +381,7 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
             className={`
               h-10 rounded-xl text-lg font-bold font-mono transition-all duration-200 glass-btn
               ${selectedOp === op
-                ? (isNeon ? 'bg-cyan-500/30 ring-2 ring-cyan-400' : 'bg-purple-200 ring-2 ring-purple-400')
+                ? (isNeon ? 'bg-cyan-500/30 ring-2 ring-cyan-400' : isRetro ? 'bg-emerald-200 ring-2 ring-emerald-500' : isLightLike ? 'bg-purple-200 ring-2 ring-purple-400' : 'bg-amber-500/20 ring-2 ring-amber-400')
                 : btnClass
               }
             `}
@@ -385,7 +393,7 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
 
       {/* History steps */}
       {history.length > 0 && (
-        <div className={`text-xs font-mono space-y-0.5 mb-2 ${isLightLike ? 'text-gray-500' : 'text-gray-400'}`}>
+        <div className={`text-xs font-mono space-y-0.5 mb-2 ${isNeon ? 'text-cyan-400/60' : isRetro ? 'text-emerald-600/60' : isLightLike ? 'text-gray-500' : 'text-amber-300/50'}`}>
           {history.map((h, i) => (
             <div key={i} className="truncate">{h}</div>
           ))}
