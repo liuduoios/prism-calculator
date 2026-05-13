@@ -422,6 +422,59 @@ body {
   opacity: 1;
 }
 
+/* ── Amber button variant (for dark theme game modes) ── */
+.amber-btn-dark {
+  background: rgba(251, 191, 36, 0.12) !important;
+  border: 1px solid rgba(251, 191, 36, 0.25) !important;
+  color: #fcd34d !important;
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.08), inset 0 1px 0 rgba(251, 191, 36, 0.08);
+}
+.amber-btn-dark:hover {
+  background: rgba(251, 191, 36, 0.2) !important;
+  border-color: rgba(251, 191, 36, 0.4) !important;
+  box-shadow: 0 8px 25px rgba(251, 191, 36, 0.15);
+  color: #fde68a !important;
+}
+
+/* Retro button variants */
+.glass-btn-number-retro {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.04), inset 0 1px 0 rgba(16, 185, 129, 0.08);
+  color: #047857;
+}
+.glass-btn-number-retro:hover {
+  background: rgba(16, 185, 129, 0.16);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.1);
+}
+
+.glass-btn-function-retro {
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.12);
+  color: #065f46;
+}
+.glass-btn-function-retro:hover {
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.glass-card-retro {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 32px;
+  box-shadow:
+    0 8px 32px rgba(16, 185, 129, 0.06),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.glass-display-retro {
+  background: rgba(16, 185, 129, 0.04);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
 /* ═══════════════════════════════════════
    NEON THEME (Cyberpunk)
    ═══════════════════════════════════════ */
