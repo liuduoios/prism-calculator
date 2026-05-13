@@ -171,7 +171,7 @@ function CalculatorContent() {
 
         {/* ═══ DEFAULT: Calculator Mode — three-column layout ═══ */}
         {activeMode === 'calculator' && (
-          <div className="flex gap-5 w-full max-w-[1200px] justify-center items-stretch">
+          <div className="flex flex-col xl:flex-row gap-5 w-full max-w-[1200px] justify-center items-stretch">
 
             {/* Column 1: Mode Toolbar — desktop sidebar */}
             <div className={`
@@ -199,14 +199,14 @@ function CalculatorContent() {
               <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
             </div>
 
-            {/* Mobile: compact mode toggles — tiny row */}
-            <div className="lg:hidden w-full max-w-[420px] flex items-center gap-1.5 mb-1">
+            {/* Mobile: compact mode toggles — tiny row ABOVE calculator */}
+            <div className="xl:hidden w-full flex items-center gap-1.5 mb-1">
               <button type="button" onClick={() => switchMode('24game')} className="flex-1 h-9 rounded-full text-[11px] font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🃏 24点</button>
               <button type="button" onClick={() => switchMode('challenge')} className="flex-1 h-9 rounded-full text-[11px] font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🏆 口算</button>
               <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} compact />
             </div>
 
-            {/* Column 2+3: Calculator + History (same height grid) */}
+            {/* Calculator + History row (stacks on mobile) */}
             <div className="flex gap-5 w-full max-w-[740px] items-stretch">
               <div className={`
                 flex-1 min-w-0 flex flex-col p-6
