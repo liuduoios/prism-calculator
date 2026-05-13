@@ -28,6 +28,10 @@ export type CalculatorAction =
   | { type: 'SCIENTIFIC'; func: string }
   | { type: 'CLEAR_HISTORY' }
   | { type: 'SELECT_HISTORY'; item: HistoryItem }
+  | { type: 'MEMORY_ADD' }
+  | { type: 'MEMORY_SUBTRACT' }
+  | { type: 'MEMORY_RECALL' }
+  | { type: 'MEMORY_CLEAR' }
 
 function evaluate(a: number, b: number, op: string): number {
   switch (op) {
@@ -248,6 +252,28 @@ export function calculatorReducer(state: CalculatorState, action: CalculatorActi
         waitingForOperand: false,
       }
     }
+
+    case 'MEMORY_ADD': {
+      const memVal = parseFloat(state.displayValue)
+      if (isNaN(memVal)) return state
+      return { ...state, memory: state.memory + memVal }
+    }
+
+    case 'MEMORY_SUBTRACT': {
+      const memVal = parseFloat(state.displayValue)
+      if (isNaN(memVal)) return state
+      return { ...state, memory: state.memory - memVal }
+    }
+
+    case 'MEMORY_RECALL':
+      return {
+        ...state,
+        displayValue: formatResult(state.memory),
+        waitingForOperand: true,
+      }
+
+    case 'MEMORY_CLEAR':
+      return { ...state, memory: 0 }
 
     default:
       return state

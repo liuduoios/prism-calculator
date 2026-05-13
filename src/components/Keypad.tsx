@@ -16,26 +16,51 @@ interface ButtonConfig {
 
 function getButtonStyles(
   variant: ButtonConfig['variant'],
-  isLight: boolean,
+  theme: string,
 ): string {
   const base = `glass-btn w-full h-14 text-base md:text-lg`
 
-  const variantMap: Record<ButtonConfig['variant'], string> = {
-    number: isLight ? 'glass-btn-number-light' : 'glass-btn-number-dark',
-    operator: isLight ? 'glass-btn-operator-light' : 'glass-btn-operator-dark',
-    function: isLight ? 'glass-btn-function-light' : 'glass-btn-function-dark',
-    equals: isLight ? 'glass-btn-equals-light' : 'glass-btn-equals-dark',
-    clear: isLight ? 'glass-btn-clear-light' : 'glass-btn-clear-dark',
-    scientific: isLight ? 'glass-btn-sci-light' : 'glass-btn-sci-dark',
+  const variantMap: Record<string, Record<ButtonConfig['variant'], string>> = {
+    light: {
+      number: 'glass-btn-number-light',
+      operator: 'glass-btn-operator-light',
+      function: 'glass-btn-function-light',
+      equals: 'glass-btn-equals-light',
+      clear: 'glass-btn-clear-light',
+      scientific: 'glass-btn-sci-light',
+    },
+    dark: {
+      number: 'glass-btn-number-dark',
+      operator: 'glass-btn-operator-dark',
+      function: 'glass-btn-function-dark',
+      equals: 'glass-btn-equals-dark',
+      clear: 'glass-btn-clear-dark',
+      scientific: 'glass-btn-sci-dark',
+    },
+    neon: {
+      number: 'glass-btn-number-neon',
+      operator: 'glass-btn-operator-neon',
+      function: 'glass-btn-function-neon',
+      equals: 'glass-btn-equals-neon',
+      clear: 'glass-btn-clear-neon',
+      scientific: 'glass-btn-sci-neon',
+    },
+    retro: {
+      number: 'glass-btn-number-retro',
+      operator: 'glass-btn-operator-retro',
+      function: 'glass-btn-function-retro',
+      equals: 'glass-btn-equals-retro',
+      clear: 'glass-btn-clear-retro',
+      scientific: 'glass-btn-sci-retro',
+    },
   }
 
-  return `${base} ${variantMap[variant]}`
+  return `${base} ${variantMap[theme]?.[variant] ?? variantMap.light[variant]}`
 }
 
 export default function Keypad({ dispatch }: KeypadProps) {
   const { theme } = useTheme()
   const { t } = useTranslation()
-  const isLight = theme === 'light'
   const [showScientific, setShowScientific] = useState(false)
 
   const digit = (d: string) => () => dispatch({ type: 'INPUT_DIGIT', digit: d })
@@ -99,12 +124,17 @@ export default function Keypad({ dispatch }: KeypadProps) {
           py-2 px-4 mb-5 rounded-full text-xs font-semibold tracking-wider
           transition-all duration-300
           glass-btn
-          ${isLight
-            ? 'glass-btn-function-light'
-            : 'glass-btn-function-dark'
+          ${
+            theme === 'light'
+              ? 'glass-btn-function-light'
+              : theme === 'retro'
+                ? 'glass-btn-function-retro'
+                : theme === 'neon'
+                  ? 'glass-btn-function-neon'
+                  : 'glass-btn-function-dark'
           }
           ${showScientific
-            ? (isLight
+            ? (theme === 'light' || theme === 'retro'
               ? '!bg-purple-100/60 !border-purple-300/40 !text-purple-600'
               : '!bg-purple-500/10 !border-purple-400/20 !text-purple-400')
             : ''
@@ -130,7 +160,7 @@ export default function Keypad({ dispatch }: KeypadProps) {
                 key={btn.label}
                 type="button"
                 onClick={btn.action}
-                className={`${getButtonStyles(btn.variant, isLight)} text-xs font-mono h-11`}
+                className={`${getButtonStyles(btn.variant, theme)} text-xs font-mono h-11`}
               >
                 {btn.label}
               </button>
@@ -139,7 +169,7 @@ export default function Keypad({ dispatch }: KeypadProps) {
           {/* Divider */}
           <div className={`
             w-full h-px mb-5 rounded-full
-            ${isLight ? 'bg-black/8' : 'bg-white/8'}
+            ${theme === 'light' || theme === 'retro' ? 'bg-black/8' : 'bg-white/8'}
           `} />
         </>
       )}
@@ -152,10 +182,34 @@ export default function Keypad({ dispatch }: KeypadProps) {
             type="button"
             onClick={btn.action}
             className={
-              getButtonStyles(btn.variant, isLight) +
+              getButtonStyles(btn.variant, theme) +
               (btn.variant === 'number' ? ' font-semibold' : '') +
               (btn.variant === 'equals' ? ' text-xl tracking-wider' : '')
             }
+          >
+            {btn.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Memory row */}
+      <div className="grid grid-cols-4 gap-2.5 mt-2.5">
+        {[
+          { label: t('memory.clear'), action: () => dispatch({ type: 'MEMORY_CLEAR' }) },
+          { label: t('memory.recall'), action: () => dispatch({ type: 'MEMORY_RECALL' }) },
+          { label: t('memory.add'), action: () => dispatch({ type: 'MEMORY_ADD' }) },
+          { label: t('memory.subtract'), action: () => dispatch({ type: 'MEMORY_SUBTRACT' }) },
+        ].map((btn) => (
+          <button
+            key={btn.label}
+            type="button"
+            onClick={btn.action}
+            className={`glass-btn w-full h-10 text-xs font-semibold tracking-wider font-mono
+              ${theme === 'light' || theme === 'retro'
+                ? 'glass-btn-function-light text-amber-600'
+                : 'glass-btn-function-dark text-amber-400'
+              }
+            `}
           >
             {btn.label}
           </button>
