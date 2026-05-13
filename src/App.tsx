@@ -77,6 +77,13 @@ function CalculatorContent() {
         ? 'glass-btn amber-btn-dark'
         : 'glass-btn glass-btn-function-light'
 
+  const bgMap: Record<string, string> = {
+    light: 'bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50',
+    dark: 'bg-gradient-to-br from-gray-950 via-slate-900 to-gray-900',
+    neon: 'bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950',
+    retro: 'bg-gradient-to-br from-amber-50 via-emerald-50 to-teal-50',
+  }
+
   const headerBgMap: Record<string, string> = {
     light: 'bg-white/40 backdrop-blur-md border-b border-white/40',
     dark: 'bg-gray-900/40 backdrop-blur-md border-b border-white/5',
