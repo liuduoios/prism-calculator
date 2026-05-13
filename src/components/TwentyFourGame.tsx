@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useTheme } from '../context/ThemeContext'
-import { themeClass, BTN_FUNCTION, BTN_NUMBER, BTN_AMBER_DARK } from '../utils/themeClasses'
+import { themeClass, BTN_FUNCTION, BTN_NUMBER, BTN_AMBER_DARK, GAME_CONTENT_TEXT } from '../utils/themeClasses'
 import { Analytics } from '../utils/analytics'
 
 interface Card {
@@ -295,12 +295,12 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
 
   if (!active) {
     return (
-      <div className="text-center py-8 opacity-50 text-sm">加载中...</div>
+      <div className={`text-center py-8 opacity-50 text-sm ${themeClass(theme, GAME_CONTENT_TEXT)}`}>加载中...</div>
     )
   }
 
   return (
-    <div className={bgCard}>
+    <div className={`${bgCard} ${themeClass(theme, GAME_CONTENT_TEXT)}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 text-xs">
