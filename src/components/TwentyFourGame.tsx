@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { Analytics } from '../utils/analytics'
 
 interface Card {
   value: number
@@ -193,6 +194,8 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
     setStats(newStats)
     saveStats(newStats)
     setActive(false)
+    // Track game completion
+    Analytics.gameModeComplete('24game', won ? timer : 0)
     // Auto-return to calculator after delay
     setTimeout(() => {
       onBack?.()

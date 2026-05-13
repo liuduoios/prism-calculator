@@ -1,4 +1,4 @@
-import { useReducer, useCallback, useState } from 'react'
+import { useReducer, useCallback, useState, useEffect } from 'react'
 import { ThemeProvider, useTheme } from './context/ThemeContext'
 import { LanguageProvider, useTranslation } from './context/LanguageContext'
 import { calculatorReducer, initialState } from './reducer/calculatorReducer'
@@ -14,22 +14,50 @@ import EasterEgg from './components/EasterEgg'
 import ProgrammerMode from './components/ProgrammerMode'
 import ChallengeMode from './components/ChallengeMode'
 import TwentyFourGame from './components/TwentyFourGame'
+import { Analytics } from './utils/analytics'
 
 type ActiveMode = 'calculator' | 'challenge' | '24game'
 
 function CalculatorContent() {
   const { theme } = useTheme()
-  const { t } = useTranslation()
+  const { t, lang } = useTranslation()
   const [state, dispatchRaw] = useReducer(calculatorReducer, initialState)
   const { playSound, vibrate } = useSoundFeedback()
-  const [activeMode, setActiveMode] = useState<ActiveMode>('calculator')
+  const [activeMode, switchModeRaw] = useState<ActiveMode>('calculator')
 
-  // Wrap dispatch with sound + haptic feedback
+  const switchMode = useCallback((mode: ActiveMode) => {
+    switchModeRaw(mode)
+    if (mode !== 'calculator') {
+      Analytics.gameModeEnter(mode)
+    }
+  }, [])
+
+  // Track theme changes
+  useEffect(() => {
+    Analytics.themeChange(theme)
+  }, [theme])
+
+  // Track language changes
+  useEffect(() => {
+    Analytics.languageChange(lang)
+  }, [lang])
+
+  // Wrap dispatch with sound + haptic feedback + analytics
   const dispatch = useCallback((action: CalculatorAction) => {
     playSound(action)
     vibrate(action)
+
+    // Track key calculator actions
+    if (action.type === 'INPUT_DIGIT') Analytics.buttonClick(action.digit)
+    else if (action.type === 'INPUT_OPERATOR') Analytics.buttonClick(action.operator)
+    else if (action.type === 'EVALUATE') {
+      Analytics.calculation(state.expression, state.displayValue)
+    }
+    else if (action.type === 'CLEAR') Analytics.buttonClick('C')
+    else if (action.type === 'SCIENTIFIC') Analytics.buttonClick(action.func)
+
     dispatchRaw(action)
-  }, [playSound, vibrate])
+  }, [playSound, vibrate, state.expression, state.displayValue])
 
   useKeyboard(dispatch)
 
@@ -113,12 +141,12 @@ function CalculatorContent() {
           `}>
             <button
               type="button"
-              onClick={() => setActiveMode('calculator')}
+              onClick={() => switchMode('calculator')}
               className="mb-4 text-sm font-medium opacity-50 hover:opacity-100 transition-opacity flex items-center gap-1"
             >
               <span>←</span> 返回计算器
             </button>
-            <ChallengeMode onBack={() => setActiveMode('calculator')} />
+            <ChallengeMode onBack={() => switchMode('calculator')} />
           </div>
         )}
 
@@ -132,12 +160,12 @@ function CalculatorContent() {
           `}>
             <button
               type="button"
-              onClick={() => setActiveMode('calculator')}
+              onClick={() => switchMode('calculator')}
               className="mb-4 text-sm font-medium opacity-50 hover:opacity-100 transition-opacity flex items-center gap-1"
             >
               <span>←</span> 返回计算器
             </button>
-            <TwentyFourGame onBack={() => setActiveMode('calculator')} />
+            <TwentyFourGame onBack={() => switchMode('calculator')} />
           </div>
         )}
 
@@ -155,14 +183,14 @@ function CalculatorContent() {
               <div className="text-xs font-semibold tracking-wider opacity-40 uppercase mb-1 text-center">游戏模式</div>
               <button
                 type="button"
-                onClick={() => setActiveMode('24game')}
+                onClick={() => switchMode('24game')}
                 className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 glass-btn glass-btn-function-light dark:glass-btn-function-dark"
               >
                 <span>🃏</span><span>24点游戏</span>
               </button>
               <button
                 type="button"
-                onClick={() => setActiveMode('challenge')}
+                onClick={() => switchMode('challenge')}
                 className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 glass-btn glass-btn-function-light dark:glass-btn-function-dark"
               >
                 <span>🏆</span><span>口算挑战</span>
@@ -173,8 +201,8 @@ function CalculatorContent() {
 
             {/* Mobile: mode toggles */}
             <div className="md:hidden w-full max-w-[420px] flex flex-col gap-2">
-              <button type="button" onClick={() => setActiveMode('24game')} className="w-full py-2 rounded-full text-sm font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🃏 24点游戏</button>
-              <button type="button" onClick={() => setActiveMode('challenge')} className="w-full py-2 rounded-full text-sm font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🏆 口算挑战</button>
+              <button type="button" onClick={() => switchMode('24game')} className="w-full py-2 rounded-full text-sm font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🃏 24点游戏</button>
+              <button type="button" onClick={() => switchMode('challenge')} className="w-full py-2 rounded-full text-sm font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🏆 口算挑战</button>
               <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
             </div>
 
