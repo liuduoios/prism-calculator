@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { Analytics } from '../utils/analytics'
 
 interface ChallengeStats {
   score: number
@@ -96,6 +97,7 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
     // Auto-return to calculator after delay
     setTimeout(() => {
       setShowResult(false)
+      Analytics.gameModeComplete('challenge', stats.score)
       onBack?.()
     }, 4000)
   }, [onBack])
