@@ -61,12 +61,21 @@ function CalculatorContent() {
 
   useKeyboard(dispatch)
 
-  const bgMap: Record<string, string> = {
-    light: 'bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50',
-    dark: 'bg-gradient-to-br from-gray-950 via-slate-900 to-gray-900',
-    neon: 'bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950',
-    retro: 'bg-gradient-to-br from-amber-50 via-emerald-50 to-teal-50',
-  }
+  const gameBtnClass = theme === 'neon'
+    ? 'glass-btn glass-btn-function-neon'
+    : theme === 'retro'
+      ? 'glass-btn glass-btn-function-retro'
+      : theme === 'dark'
+        ? 'glass-btn amber-btn-dark'
+        : 'glass-btn glass-btn-function-light'
+
+  const gameMobileBtnClass = theme === 'neon'
+    ? 'glass-btn glass-btn-function-neon'
+    : theme === 'retro'
+      ? 'glass-btn glass-btn-function-retro'
+      : theme === 'dark'
+        ? 'glass-btn amber-btn-dark'
+        : 'glass-btn glass-btn-function-light'
 
   const headerBgMap: Record<string, string> = {
     light: 'bg-white/40 backdrop-blur-md border-b border-white/40',
@@ -184,14 +193,14 @@ function CalculatorContent() {
               <button
                 type="button"
                 onClick={() => switchMode('24game')}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 glass-btn glass-btn-function-light dark:glass-btn-function-dark"
+                className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 ${gameBtnClass}`}
               >
                 <span>🃏</span><span>24点游戏</span>
               </button>
               <button
                 type="button"
                 onClick={() => switchMode('challenge')}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 glass-btn glass-btn-function-light dark:glass-btn-function-dark"
+                className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 ${gameBtnClass}`}
               >
                 <span>🏆</span><span>口算挑战</span>
               </button>
@@ -200,8 +209,8 @@ function CalculatorContent() {
 
             {/* Mobile: compact mode toggles — tiny row ABOVE calculator */}
             <div className="xl:hidden w-full flex items-center gap-1.5 mb-1">
-              <button type="button" onClick={() => switchMode('24game')} className="flex-1 h-9 rounded-full text-[11px] font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🃏 24点</button>
-              <button type="button" onClick={() => switchMode('challenge')} className="flex-1 h-9 rounded-full text-[11px] font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🏆 口算</button>
+              <button type="button" onClick={() => switchMode('24game')} className={`flex-1 h-9 rounded-full text-[11px] font-semibold ${gameMobileBtnClass}`}>🃏 24点</button>
+              <button type="button" onClick={() => switchMode('challenge')} className={`flex-1 h-9 rounded-full text-[11px] font-semibold ${gameMobileBtnClass}`}>🏆 口算</button>
             </div>
 
             {/* Calculator + History row (stacks on mobile) */}
