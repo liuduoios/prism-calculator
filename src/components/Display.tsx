@@ -8,7 +8,6 @@ interface DisplayProps {
 
 export default function Display({ displayValue, expression }: DisplayProps) {
   const { theme } = useTheme()
-  const isLight = theme === 'light'
   const prevValueRef = useRef(displayValue)
   const [animKey, setAnimKey] = useState(0)
   const [copied, setCopied] = useState(false)

@@ -79,10 +79,11 @@ export default function EasterEgg({ displayValue }: EasterEggProps) {
       return null
     }
     // Only trigger for non-trivial values (not empty/0 on empty state)
-    if (value === '0') {
-      isFirstRender.current = false
-      return null
-    }
+    if (value === '0') return null
+
+    // Try exact match first, then normalized match
+    const normalized = value.replace(/[,\s]/g, '')
+    const num = parseFloat(normalized)
 
     // Exact match
     if (EASTER_EGG_MAP[value]) {

@@ -95,18 +95,34 @@ function CalculatorContent() {
         </div>
       </header>
 
-      {/* Main */}
+      {/* Main — three-column layout */}
       <main className="relative z-10 flex-1 flex items-center justify-center p-4 md:p-6">
-        <div className="flex gap-5 w-full max-w-[960px] justify-center">
-          {/* Calculator Card */}
+        <div className="flex gap-5 w-full max-w-[1100px] justify-center items-start">
+
+          {/* Column 1: Mode Toolbar (challenge, programmer toggles) */}
           <div className={`
-            w-full max-w-[420px] flex flex-col p-6
+            hidden md:flex flex-col gap-3 w-52 p-5
             glass-card
             ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
             ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
           `}>
             <ChallengeMode />
             <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
+          </div>
+
+          {/* Mobile: mode toggles inside calculator card (visible below md) */}
+          <div className="md:hidden w-full max-w-[420px] flex flex-col gap-2">
+            <ChallengeMode />
+            <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
+          </div>
+
+          {/* Column 2: Calculator Card */}
+          <div className={`
+            w-full max-w-[420px] flex flex-col p-6
+            glass-card
+            ${theme === 'neon' ? 'glass-card-neon' : theme === 'retro' ? 'glass-card-retro' : theme === 'light' ? 'glass-card-light' : 'glass-card-dark'}
+            ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
+          `}>
             <Display
               displayValue={state.displayValue}
               expression={state.expression}
@@ -114,7 +130,7 @@ function CalculatorContent() {
             <Keypad dispatch={dispatch} />
           </div>
 
-          {/* History Panel */}
+          {/* Column 3: History Panel */}
           <div className={`
             hidden lg:flex flex-col w-72 p-6
             glass-card
