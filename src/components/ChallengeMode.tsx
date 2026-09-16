@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useTheme } from '../context/ThemeContext'
-import { themeClass, BTN_FUNCTION, BTN_AMBER_DARK } from '../utils/themeClasses'
+import { themeClass, BTN_FUNCTION, BTN_AMBER_DARK, GAME_CONTENT_TEXT } from '../utils/themeClasses'
 import { Analytics } from '../utils/analytics'
 
 interface ChallengeStats {
@@ -223,13 +223,13 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
 
   if (!active && !showResult) {
     return (
-      <div className="text-center py-8 opacity-50 text-sm">加载中...</div>
+      <div className={`text-center py-8 opacity-50 text-sm ${themeClass(theme, GAME_CONTENT_TEXT)}`}>加载中...</div>
     )
   }
 
   if (showResult) {
     return (
-      <div className={`mb-4 rounded-2xl p-5 text-center ${bgAccent}`}>
+      <div className={`mb-4 rounded-2xl p-5 text-center ${bgAccent} ${themeClass(theme, GAME_CONTENT_TEXT)}`}>
         <div className="text-3xl mb-2">🏆</div>
         <h3 className={`font-bold text-lg mb-1 ${accentColor}`}>挑战结束！</h3>
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs mt-3">
@@ -260,7 +260,7 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
   if (!question) return null
 
   return (
-    <div className={`mb-4 rounded-2xl p-4 ${bgAccent} transition-all duration-200 ${feedback === 'correct' ? 'ring-2 ring-green-400' : feedback === 'wrong' ? 'ring-2 ring-red-400 animate-shake' : ''}`}>
+    <div className={`mb-4 rounded-2xl p-4 ${bgAccent} transition-all duration-200 ${themeClass(theme, GAME_CONTENT_TEXT)} ${feedback === 'correct' ? 'ring-2 ring-green-400' : feedback === 'wrong' ? 'ring-2 ring-red-400 animate-shake' : ''}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3 text-xs">

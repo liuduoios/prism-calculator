@@ -188,3 +188,11 @@ export const ACCENT_BG: Record<Theme, string> = {
   neon: '!bg-purple-500/10 !border-purple-400/20 !text-purple-400',
   retro: '!bg-purple-100/60 !border-purple-300/40 !text-purple-600',
 }
+
+/** Default text color for game-mode content areas (ChallengeMode, 24-Game etc.) */
+export const GAME_CONTENT_TEXT: Record<Theme, string> = {
+  light: 'text-gray-700',
+  dark: 'text-gray-200',
+  neon: 'text-cyan-100',
+  retro: 'text-emerald-800',
+}
