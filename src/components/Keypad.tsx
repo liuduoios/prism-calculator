@@ -92,6 +92,7 @@ export default function Keypad({ dispatch }: KeypadProps) {
     <div>
       {/* Scientific toggle — refined glass chip style */}
       <button
+        type="button"
         onClick={() => setShowScientific(!showScientific)}
         className={`
           w-full flex items-center justify-center gap-2.5
@@ -127,6 +128,7 @@ export default function Keypad({ dispatch }: KeypadProps) {
             {scientificButtons.map((btn) => (
               <button
                 key={btn.label}
+                type="button"
                 onClick={btn.action}
                 className={`${getButtonStyles(btn.variant, isLight)} text-xs font-mono h-11`}
               >
@@ -147,6 +149,7 @@ export default function Keypad({ dispatch }: KeypadProps) {
         {basicButtons.map((btn) => (
           <button
             key={btn.label + btn.variant}
+            type="button"
             onClick={btn.action}
             className={
               getButtonStyles(btn.variant, isLight) +

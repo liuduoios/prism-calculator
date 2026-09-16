@@ -6,6 +6,7 @@ export default function ThemeToggle() {
 
   return (
     <button
+      type="button"
       onClick={toggleTheme}
       className={`
         relative w-18 h-9 rounded-full

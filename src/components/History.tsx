@@ -41,6 +41,7 @@ export default function History({ history, onSelect, onClear }: HistoryProps) {
           <span>{t('history.title')}</span>
         </h3>
         <button
+          type="button"
           onClick={onClear}
           className={`
             text-xs px-3 py-1.5 rounded-xl font-medium
@@ -58,6 +59,7 @@ export default function History({ history, onSelect, onClear }: HistoryProps) {
         {history.map((item, index) => (
           <button
             key={item.id}
+            type="button"
             onClick={() => onSelect(item)}
             className={`
               w-full text-left p-3.5 rounded-xl

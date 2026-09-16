@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 
-type Lang = 'zh' | 'en'
+type Lang = 'en' | 'zh' | 'ja' | 'ko' | 'fr'
 
 interface LanguageContextType {
   lang: Lang
@@ -10,41 +10,74 @@ interface LanguageContextType {
 
 const translations: Record<string, Record<Lang, string>> = {
   'app.title': {
-    zh: '浮光计算器',
     en: 'Prism Calculator',
+    zh: '浮光计算器',
+    ja: 'プリズム電卓',
+    ko: '프리즘 계산기',
+    fr: 'Calculatrice Prism',
   },
   'app.footer': {
-    zh: 'Glassmorphism 设计',
     en: 'Glassmorphism Design',
+    zh: 'Glassmorphism 设计',
+    ja: 'Glassmorphism デザイン',
+    ko: 'Glassmorphism 디자인',
+    fr: 'Design Glassmorphism',
   },
   'history.empty': {
+    en: 'No history',
     zh: '暂无计算历史',
-    en: 'No calculation history',
+    ja: '履歴なし',
+    ko: '계산 기록 없음',
+    fr: 'Aucun historique',
   },
   'history.title': {
-    zh: '计算历史',
     en: 'History',
+    zh: '计算历史',
+    ja: '計算履歴',
+    ko: '계산 기록',
+    fr: 'Historique',
   },
   'history.clear': {
-    zh: '清空',
     en: 'Clear',
+    zh: '清空',
+    ja: 'クリア',
+    ko: '비우기',
+    fr: 'Effacer',
   },
   'sci.expand': {
-    zh: '展开科学计算',
     en: 'Scientific',
+    zh: '展开科学计算',
+    ja: '科学計算',
+    ko: '과학 계산',
+    fr: 'Scientifique',
   },
   'sci.collapse': {
-    zh: '收起科学计算',
     en: 'Hide Scientific',
+    zh: '收起科学计算',
+    ja: '科学計算を隠す',
+    ko: '과학 계산 숨기기',
+    fr: 'Masquer scientifique',
   },
 }
+
+const langOrder: Lang[] = ['en', 'zh', 'ja', 'ko', 'fr']
+
+const langLabel: Record<Lang, string> = {
+  en: 'EN',
+  zh: '中文',
+  ja: '日本語',
+  ko: '한국어',
+  fr: 'FR',
+}
+
+export { langOrder, langLabel }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
 function getInitialLang(): Lang {
   const stored = localStorage.getItem('calculator-lang')
-  if (stored === 'zh' || stored === 'en') return stored
-  return navigator.language.startsWith('zh') ? 'zh' : 'en'
+  if (langOrder.includes(stored as Lang)) return stored as Lang
+  return 'en'
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
