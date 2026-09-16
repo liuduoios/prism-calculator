@@ -196,14 +196,12 @@ function CalculatorContent() {
                 <span>🏆</span><span>口算挑战</span>
               </button>
               <div className="text-xs font-semibold tracking-wider opacity-40 uppercase mb-1 mt-2 text-center">工具</div>
-              <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
             </div>
 
             {/* Mobile: compact mode toggles — tiny row ABOVE calculator */}
             <div className="xl:hidden w-full flex items-center gap-1.5 mb-1">
               <button type="button" onClick={() => switchMode('24game')} className="flex-1 h-9 rounded-full text-[11px] font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🃏 24点</button>
               <button type="button" onClick={() => switchMode('challenge')} className="flex-1 h-9 rounded-full text-[11px] font-semibold glass-btn glass-btn-function-light dark:glass-btn-function-dark">🏆 口算</button>
-              <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} compact />
             </div>
 
             {/* Calculator + History row (stacks on mobile) */}
@@ -216,6 +214,7 @@ function CalculatorContent() {
               `}>
                 <Display displayValue={state.displayValue} expression={state.expression} />
                 <Keypad dispatch={dispatch} />
+                <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
               </div>
               <div className={`
                 hidden xl:flex flex-col w-72 p-6
