@@ -25,7 +25,6 @@ export default function LanguageToggle() {
   }, [open, close])
 
   const handleSelect = (l: typeof lang) => {
-    console.log('[LanguageToggle.handleSelect]', l, 'current:', lang)
     setLang(l)
     setOpen(false)
   }
