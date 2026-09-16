@@ -213,8 +213,8 @@ function CalculatorContent() {
                 ${theme === 'neon' ? 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]'}
               `}>
                 <Display displayValue={state.displayValue} expression={state.expression} />
-                <Keypad dispatch={dispatch} />
                 <ProgrammerMode displayValue={state.displayValue} dispatch={dispatch} />
+                <Keypad dispatch={dispatch} />
               </div>
               <div className={`
                 hidden xl:flex flex-col w-72 p-6
