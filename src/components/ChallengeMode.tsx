@@ -194,10 +194,19 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
       ? 'glass-btn-function-retro'
       : isLightLike
         ? 'glass-btn-function-light'
-        : 'glass-btn-function-dark'
+        : 'glass-btn amber-btn-dark'
 
-  const accentColor = isNeon ? 'text-cyan-300' : isRetro ? 'text-emerald-600' : isLightLike ? 'text-purple-600' : 'text-purple-400'
-  const bgAccent = isNeon ? 'bg-cyan-500/10' : isRetro ? 'bg-emerald-100' : isLightLike ? 'bg-purple-50' : 'bg-purple-500/10'
+  const accentColor = isNeon ? 'text-cyan-300' : isRetro ? 'text-emerald-600' : isLightLike ? 'text-purple-600' : 'text-amber-300'
+  const bgAccent = isNeon ? 'bg-cyan-500/10' : isRetro ? 'bg-emerald-100' : isLightLike ? 'bg-purple-50' : 'bg-amber-500/8'
+  const inputDark = 'bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-amber-400/50'
+  const inputLight = 'bg-white/60 border border-white/60 text-gray-900 placeholder-gray-400 focus:border-purple-400'
+  const inputClass = isNeon
+    ? 'bg-white/5 border border-white/10 text-cyan-100 placeholder-gray-500 focus:border-cyan-400/50'
+    : isRetro
+      ? 'bg-emerald-50 border border-emerald-200 text-emerald-900 placeholder-emerald-400 focus:border-emerald-500'
+      : isLightLike
+        ? inputLight
+        : inputDark
 
   // Auto-start game on mount (App handles the wrapper visibility)
   useEffect(() => {
@@ -215,7 +224,7 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
 
   if (showResult) {
     return (
-      <div className={`mb-4 rounded-2xl p-5 text-center ${bgAccent} border border-white/10`}>
+      <div className={`mb-4 rounded-2xl p-5 text-center ${bgAccent}`}>
         <div className="text-3xl mb-2">🏆</div>
         <h3 className={`font-bold text-lg mb-1 ${accentColor}`}>挑战结束！</h3>
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs mt-3">
@@ -246,7 +255,7 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
   if (!question) return null
 
   return (
-    <div className={`mb-4 rounded-2xl p-4 ${bgAccent} border border-white/10 transition-all duration-200 ${feedback === 'correct' ? 'ring-2 ring-green-400' : feedback === 'wrong' ? 'ring-2 ring-red-400 animate-shake' : ''}`}>
+    <div className={`mb-4 rounded-2xl p-4 ${bgAccent} transition-all duration-200 ${feedback === 'correct' ? 'ring-2 ring-green-400' : feedback === 'wrong' ? 'ring-2 ring-red-400 animate-shake' : ''}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3 text-xs">
@@ -296,10 +305,7 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
           className={`
             flex-1 h-10 px-4 rounded-xl text-center font-mono font-bold text-lg
             outline-none transition-all duration-200
-            ${isLightLike
-              ? 'bg-white/60 border border-white/60 text-gray-900 placeholder-gray-400 focus:border-purple-400'
-              : 'bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-purple-400/50'
-            }
+            ${inputClass}
           `}
         />
         <button
