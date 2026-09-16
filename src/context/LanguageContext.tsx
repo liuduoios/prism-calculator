@@ -58,6 +58,34 @@ const translations: Record<string, Record<Lang, string>> = {
     ko: '과학 계산 숨기기',
     fr: 'Masquer scientifique',
   },
+  'memory.add': {
+    en: 'M+',
+    zh: 'M+',
+    ja: 'M+',
+    ko: 'M+',
+    fr: 'M+',
+  },
+  'memory.subtract': {
+    en: 'M−',
+    zh: 'M−',
+    ja: 'M−',
+    ko: 'M−',
+    fr: 'M−',
+  },
+  'memory.recall': {
+    en: 'MR',
+    zh: 'MR',
+    ja: 'MR',
+    ko: 'MR',
+    fr: 'MR',
+  },
+  'memory.clear': {
+    en: 'MC',
+    zh: 'MC',
+    ja: 'MC',
+    ko: 'MC',
+    fr: 'MC',
+  },
 }
 
 const langOrder: Lang[] = ['en', 'zh', 'ja', 'ko', 'fr']

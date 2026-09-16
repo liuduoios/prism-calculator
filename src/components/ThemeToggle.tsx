@@ -1,51 +1,47 @@
 import { useTheme } from '../context/ThemeContext'
+import type { Theme } from '../context/ThemeContext'
+
+const THEME_META: Record<Theme, { icon: string; label: string; gradient: string }> = {
+  light: { icon: '☀️', label: '亮色', gradient: 'from-amber-300 to-amber-400' },
+  dark: { icon: '🌙', label: '暗色', gradient: 'from-indigo-400 to-purple-500' },
+  neon: { icon: '🌆', label: '霓虹', gradient: 'from-cyan-400 via-fuchsia-400 to-amber-400' },
+  retro: { icon: '📟', label: '复古', gradient: 'from-emerald-500 to-teal-600' },
+}
 
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme()
-  const isLight = theme === 'light'
+  const meta = THEME_META[theme]
 
   return (
     <button
       type="button"
       onClick={toggleTheme}
       className={`
-        relative w-18 h-9 rounded-full
+        relative h-9 px-3 rounded-full flex items-center gap-1.5
         transition-all duration-500 ease-out
-        flex items-center px-1.5
-        backdrop-blur-md
-        ${isLight
-          ? 'bg-white/50 border border-white/60 shadow-sm hover:shadow-md'
-          : 'bg-white/5 border border-white/10 shadow-sm hover:shadow-md'
+        backdrop-blur-md cursor-pointer
+        text-[11px] font-semibold tracking-wider whitespace-nowrap
+        ${theme === 'light'
+          ? 'bg-white/50 border border-white/60 text-gray-700 hover:shadow-md'
+          : theme === 'dark'
+            ? 'bg-white/5 border border-white/10 text-gray-300 hover:shadow-md'
+            : theme === 'neon'
+              ? 'bg-black/40 border border-cyan-400/40 text-cyan-300 hover:shadow-md hover:shadow-cyan-500/20'
+              : 'bg-amber-900/30 border border-amber-500/30 text-amber-400 hover:shadow-md'
         }
       `}
       aria-label="切换主题"
     >
-      {/* Track icons */}
-      <span className={`
-        absolute left-2 text-xs transition-all duration-300
-        ${isLight ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
-      `}>☀️</span>
-      <span className={`
-        absolute right-2 text-xs transition-all duration-300
-        ${isLight ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}
-      `}>🌙</span>
+      <span className="text-xs leading-none">{meta.icon}</span>
+      <span>{meta.label}</span>
 
-      {/* Thumb */}
+      {/* Thumb indicator */}
       <span className={`
-        relative w-6 h-6 rounded-full
-        shadow-md
-        transform transition-all duration-500 ease-out
-        ${isLight
-          ? 'translate-x-0 bg-gradient-to-br from-amber-300 to-amber-400'
-          : 'translate-x-9 bg-gradient-to-br from-indigo-400 to-purple-500'
-        }
+        w-5 h-5 rounded-full shadow-md
+        bg-gradient-to-br ${meta.gradient}
+        flex items-center justify-center
       `}>
-        {/* Inner glow */}
-        <span className={`
-          absolute inset-1 rounded-full
-          transition-opacity duration-300
-          ${isLight ? 'bg-white/40' : 'bg-white/20'}
-        `} />
+        <span className="w-2 h-2 rounded-full bg-white/40" />
       </span>
     </button>
   )

@@ -1,34 +1,49 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 
-type Theme = 'light' | 'dark'
+export type Theme = 'light' | 'dark' | 'neon' | 'retro'
 
 interface ThemeContextType {
   theme: Theme
+  setTheme: (t: Theme) => void
   toggleTheme: () => void
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
+const THEME_LIST: Theme[] = ['light', 'dark', 'neon', 'retro']
+
 function getInitialTheme(): Theme {
   const stored = localStorage.getItem('calculator-theme')
-  if (stored === 'dark' || stored === 'light') return stored
+  if (THEME_LIST.includes(stored as Theme)) return stored as Theme
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme)
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme)
+
+  const setTheme = (t: Theme) => {
+    setThemeState(t)
+    localStorage.setItem('calculator-theme', t)
+  }
 
   useEffect(() => {
     const root = document.documentElement
-    root.classList.remove('light', 'dark')
+    // Remove all theme classes
+    THEME_LIST.forEach(t => root.classList.remove(t))
     root.classList.add(theme)
-    localStorage.setItem('calculator-theme', theme)
   }, [theme])
 
-  const toggleTheme = () => setTheme(prev => (prev === 'light' ? 'dark' : 'light'))
+  const toggleTheme = () => {
+    setThemeState(prev => {
+      const idx = THEME_LIST.indexOf(prev)
+      const next = THEME_LIST[(idx + 1) % THEME_LIST.length]
+      localStorage.setItem('calculator-theme', next)
+      return next
+    })
+  }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   )
