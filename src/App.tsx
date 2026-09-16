@@ -1,14 +1,17 @@
 import { useReducer } from 'react'
 import { ThemeProvider, useTheme } from './context/ThemeContext'
+import { LanguageProvider, useTranslation } from './context/LanguageContext'
 import { calculatorReducer, initialState } from './reducer/calculatorReducer'
 import { useKeyboard } from './hooks/useKeyboard'
 import Display from './components/Display'
 import Keypad from './components/Keypad'
 import History from './components/History'
 import ThemeToggle from './components/ThemeToggle'
+import LanguageToggle from './components/LanguageToggle'
 
 function CalculatorContent() {
   const { theme } = useTheme()
+  const { t } = useTranslation()
   const [state, dispatch] = useReducer(calculatorReducer, initialState)
   useKeyboard(dispatch)
 
@@ -37,12 +40,15 @@ function CalculatorContent() {
         <div className="flex items-center gap-3">
           <span className="text-2xl drop-shadow-lg">🧮</span>
           <span className={`text-xl font-bold tracking-tight font-display
-            ${isLight ? 'text-gray-800' : 'text-white'}`}
-          >
-            精美计算器
+            ${isLight ? 'text-gray-800' : 'text-white'}
+          `}>
+            {t('app.title')}
           </span>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
       </header>
 
       {/* Main */}
@@ -82,7 +88,7 @@ function CalculatorContent() {
       <footer className={`relative z-10 py-4 text-center text-xs font-medium tracking-wide
         ${isLight ? 'text-purple-300/70' : 'text-gray-600'}`}
       >
-        <p>&copy; {new Date().getFullYear()} 精美计算器 &mdash; Glassmorphism Design</p>
+        <p>&copy; {new Date().getFullYear()} {t('app.title')} &mdash; {t('app.footer')}</p>
       </footer>
     </div>
   )
@@ -91,7 +97,9 @@ function CalculatorContent() {
 function App() {
   return (
     <ThemeProvider>
-      <CalculatorContent />
+      <LanguageProvider>
+        <CalculatorContent />
+      </LanguageProvider>
     </ThemeProvider>
   )
 }

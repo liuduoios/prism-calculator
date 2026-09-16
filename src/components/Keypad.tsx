@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { useTranslation } from '../context/LanguageContext'
 import type { CalculatorAction } from '../reducer/calculatorReducer'
 
 interface KeypadProps {
@@ -33,6 +34,7 @@ function getButtonStyles(
 
 export default function Keypad({ dispatch }: KeypadProps) {
   const { theme } = useTheme()
+  const { t } = useTranslation()
   const isLight = theme === 'light'
   const [showScientific, setShowScientific] = useState(false)
 
@@ -112,7 +114,7 @@ export default function Keypad({ dispatch }: KeypadProps) {
         <span className={`text-sm transition-transform duration-300 ${showScientific ? 'rotate-45' : ''}`}>
           ▸
         </span>
-        <span>{showScientific ? '收起科学计算' : '展开科学计算'}</span>
+        <span>{showScientific ? t('sci.collapse') : t('sci.expand')}</span>
         <span className={`text-xs opacity-60 ${showScientific ? 'order-first -rotate-45' : ''}`}>
           fn
         </span>
