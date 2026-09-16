@@ -1,8 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useTranslation, langOrder, langLabel } from '../context/LanguageContext'
+import { useTheme } from '../context/ThemeContext'
+import { themeClass, HEADER_TEXT } from '../utils/themeClasses'
 
 export default function LanguageToggle() {
   const { lang, setLang } = useTranslation()
+  const { theme } = useTheme()
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -29,6 +32,19 @@ export default function LanguageToggle() {
     setOpen(false)
   }
 
+  const isDarkBg = theme === 'dark' || theme === 'neon'
+
+  const btnClass = isDarkBg
+    ? 'bg-white/5 border border-white/10 text-gray-300 hover:shadow-md'
+    : 'bg-white/50 border border-white/60 text-gray-700 hover:shadow-md'
+
+  const dropdownClass = isDarkBg
+    ? 'bg-gray-800/80 border border-white/10 shadow-xl shadow-black/20'
+    : 'bg-white/80 border border-white/60 shadow-xl shadow-black/5'
+
+  const itemActiveClass = isDarkBg ? 'bg-purple-500/20 text-purple-300' : 'bg-purple-100/80 text-purple-700'
+  const itemInactiveClass = isDarkBg ? 'text-gray-300 hover:bg-white/5' : 'text-gray-600 hover:bg-black/5'
+
   return (
     <div ref={containerRef} className="relative">
       <button
@@ -41,10 +57,7 @@ export default function LanguageToggle() {
           backdrop-blur-md cursor-pointer
           text-[11px] font-semibold tracking-wider
           whitespace-nowrap
-          ${lang === 'en'
-            ? 'bg-white/50 border border-white/60 text-gray-700 hover:shadow-md'
-            : 'bg-white/5 border border-white/10 text-gray-300 hover:shadow-md'
-          }
+          ${btnClass}
         `}
         aria-label="切换语言"
       >
@@ -59,10 +72,7 @@ export default function LanguageToggle() {
             absolute right-0 top-full mt-1.5 py-1 min-w-[120px]
             rounded-xl overflow-hidden z-[9999]
             backdrop-blur-xl
-            ${lang === 'en'
-              ? 'bg-white/80 border border-white/60 shadow-xl shadow-black/5'
-              : 'bg-gray-800/80 border border-white/10 shadow-xl shadow-black/20'
-            }
+            ${dropdownClass}
           `}
         >
           {langOrder.map((l) => (
@@ -79,14 +89,7 @@ export default function LanguageToggle() {
                 w-full text-left px-3.5 py-2 text-xs font-medium
                 transition-colors duration-150
                 flex items-center gap-2
-                ${l === lang
-                  ? (lang === 'en'
-                    ? 'bg-purple-100/80 text-purple-700'
-                    : 'bg-purple-500/20 text-purple-300')
-                  : (lang === 'en'
-                    ? 'text-gray-600 hover:bg-black/5'
-                    : 'text-gray-300 hover:bg-white/5')
-                }
+                ${l === lang ? itemActiveClass : itemInactiveClass}
               `}
             >
               <span className="w-5 text-center">

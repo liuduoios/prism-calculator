@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { themeClass, BTN_FUNCTION, BTN_NUMBER, BTN_AMBER_DARK } from '../utils/themeClasses'
 import { Analytics } from '../utils/analytics'
 
 interface Card {
@@ -143,25 +144,21 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
   const messageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasStarted = useRef(false)
 
-  const isNeon = theme === 'neon'
-  const isRetro = theme === 'retro'
   const isLightLike = theme === 'light' || theme === 'retro'
 
-  const btnClass = isNeon
-    ? 'glass-btn-function-neon'
-    : isRetro
-      ? 'glass-btn-function-retro'
-      : isLightLike
-        ? 'glass-btn-function-light'
-        : 'glass-btn amber-btn-dark'
+  const btnClassBase = themeClass(theme, BTN_FUNCTION)
+  const btnClass = btnClassBase === BTN_FUNCTION.dark
+    ? `glass-btn ${BTN_AMBER_DARK}`
+    : `glass-btn ${btnClassBase}`
 
-  const bgCard = isNeon
-    ? 'bg-cyan-500/10 border border-cyan-500/20'
-    : isRetro
-      ? 'bg-emerald-50/80 border border-emerald-200'
-      : isLightLike
-        ? 'bg-purple-50/60'
-        : 'bg-amber-500/5'
+  const numClass = `glass-btn ${themeClass(theme, BTN_NUMBER)}`
+
+  const bgCard = themeClass(theme, {
+    light: 'bg-purple-50/60',
+    dark: 'bg-amber-500/5',
+    neon: 'bg-cyan-500/10 border border-cyan-500/20',
+    retro: 'bg-emerald-50/80 border border-emerald-200',
+  })
 
   const showMsg = useCallback((msg: string, type: 'success' | 'error' | 'info') => {
     setMessage(msg)
@@ -308,7 +305,7 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 text-xs">
           <span className="font-bold">🃏 24点</span>
-          <span className={isNeon ? 'text-cyan-400' : isRetro ? 'text-emerald-600' : isLightLike ? 'text-purple-500' : 'text-amber-300'}>
+          <span className={themeClass(theme, { light: 'text-purple-500', dark: 'text-amber-300', neon: 'text-cyan-400', retro: 'text-emerald-600' })}>
             ⏱ {timer}s
           </span>
           {stats.bestTime > 0 && (
@@ -316,10 +313,10 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
           )}
         </div>
         <div className="flex gap-1.5">
-          <button type="button" onClick={undo} className={`text-xs px-2 py-1 rounded-lg glass-btn ${btnClass}`}>
+          <button type="button" onClick={undo} className={`text-xs px-2 py-1 rounded-lg ${btnClass}`}>
             重来
           </button>
-          <button type="button" onClick={giveUp} className={`text-xs px-2 py-1 rounded-lg glass-btn ${btnClass}`}>
+          <button type="button" onClick={giveUp} className={`text-xs px-2 py-1 rounded-lg ${btnClass}`}>
             放弃
           </button>
         </div>
@@ -327,42 +324,52 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
 
       {/* Cards */}
       <div className="grid grid-cols-4 gap-2 mb-3">
-        {cards.map((card, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => selectCard(i)}
-            disabled={card.used}
-            className={`
-              aspect-square rounded-xl flex items-center justify-center
-              text-2xl font-bold font-mono
-              transition-all duration-200
-              ${card.used
-                ? (isLightLike ? 'bg-gray-100 text-gray-300' : isRetro ? 'bg-emerald-100/50 text-emerald-300' : isNeon ? 'bg-cyan-500/5 text-cyan-600/30' : 'bg-amber-500/5 text-amber-600/30')
-                : selectedCards.includes(i)
-                  ? (isNeon ? 'bg-cyan-500/30 text-cyan-200 ring-2 ring-cyan-400' : isRetro ? 'bg-emerald-200 text-emerald-800 ring-2 ring-emerald-500' : isLightLike ? 'bg-purple-100 text-purple-700 ring-2 ring-purple-400' : 'bg-amber-500/20 text-amber-200 ring-2 ring-amber-400')
-                  : (isNeon
-                    ? 'glass-btn-number-neon cursor-pointer hover:scale-105'
-                    : isRetro
-                      ? 'glass-btn-number-retro cursor-pointer hover:scale-105'
-                      : isLightLike
-                        ? 'bg-white/80 border border-purple-200 cursor-pointer hover:bg-purple-50 hover:scale-105 text-purple-800'
-                        : 'glass-btn amber-btn-dark cursor-pointer hover:scale-105')
-              }
-            `}
-          >
-            {card.used ? '✓' : card.value}
-          </button>
-        ))}
+        {cards.map((card, i) => {
+          const usedClass = themeClass(theme, {
+            light: 'bg-gray-100 text-gray-300',
+            dark: 'bg-amber-500/5 text-amber-600/30',
+            neon: 'bg-cyan-500/5 text-cyan-600/30',
+            retro: 'bg-emerald-100/50 text-emerald-300',
+          })
+          const selectedClass = themeClass(theme, {
+            light: 'bg-purple-100 text-purple-700 ring-2 ring-purple-400',
+            dark: 'bg-amber-500/20 text-amber-200 ring-2 ring-amber-400',
+            neon: 'bg-cyan-500/30 text-cyan-200 ring-2 ring-cyan-400',
+            retro: 'bg-emerald-200 text-emerald-800 ring-2 ring-emerald-500',
+          })
+          const activeCardClass = themeClass(theme, {
+            light: 'bg-white/80 border border-purple-200 cursor-pointer hover:bg-purple-50 hover:scale-105 text-purple-800',
+            dark: `glass-btn ${BTN_AMBER_DARK} cursor-pointer hover:scale-105`,
+            neon: `glass-btn ${BTN_NUMBER.neon} cursor-pointer hover:scale-105`,
+            retro: `glass-btn ${BTN_NUMBER.retro} cursor-pointer hover:scale-105`,
+          })
+
+          return (
+            <button
+              key={i}
+              type="button"
+              onClick={() => selectCard(i)}
+              disabled={card.used}
+              className={`
+                aspect-square rounded-xl flex items-center justify-center
+                text-2xl font-bold font-mono
+                transition-all duration-200
+                ${card.used ? usedClass : selectedCards.includes(i) ? selectedClass : activeCardClass}
+              `}
+            >
+              {card.used ? '✓' : card.value}
+            </button>
+          )
+        })}
       </div>
 
       {/* Current state display */}
-      <div className={`text-center mb-3 font-mono ${isNeon ? 'text-cyan-100' : isRetro ? 'text-emerald-800' : isLightLike ? 'text-gray-700' : 'text-amber-100'}`}>
+      <div className={`text-center mb-3 font-mono ${themeClass(theme, { light: 'text-gray-700', dark: 'text-amber-100', neon: 'text-cyan-100', retro: 'text-emerald-800' })}`}>
         {currentValue !== null && (
           <span className="text-xl font-bold">{Math.round(currentValue * 1000) / 1000}</span>
         )}
         {selectedOp && (
-          <span className={`text-xl font-bold mx-2 ${isNeon ? 'text-cyan-400' : 'text-purple-500'}`}>
+          <span className={`text-xl font-bold mx-2 ${themeClass(theme, { light: 'text-purple-500', dark: 'text-purple-500', neon: 'text-cyan-400', retro: 'text-purple-500' })}`}>
             {opSymbol(selectedOp)}
           </span>
         )}
@@ -373,27 +380,32 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
 
       {/* Operators */}
       <div className="grid grid-cols-4 gap-2 mb-3">
-        {(['+', '−', '×', '÷'] as Op[]).map(op => (
-          <button
-            key={op}
-            type="button"
-            onClick={() => selectOp(op)}
-            className={`
-              h-10 rounded-xl text-lg font-bold font-mono transition-all duration-200 glass-btn
-              ${selectedOp === op
-                ? (isNeon ? 'bg-cyan-500/30 ring-2 ring-cyan-400' : isRetro ? 'bg-emerald-200 ring-2 ring-emerald-500' : isLightLike ? 'bg-purple-200 ring-2 ring-purple-400' : 'bg-amber-500/20 ring-2 ring-amber-400')
-                : btnClass
-              }
-            `}
-          >
-            {opSymbol(op)}
-          </button>
-        ))}
+        {(['+', '−', '×', '÷'] as Op[]).map(op => {
+          const opSelectedClass = themeClass(theme, {
+            light: 'bg-purple-200 ring-2 ring-purple-400',
+            dark: 'bg-amber-500/20 ring-2 ring-amber-400',
+            neon: 'bg-cyan-500/30 ring-2 ring-cyan-400',
+            retro: 'bg-emerald-200 ring-2 ring-emerald-500',
+          })
+          return (
+            <button
+              key={op}
+              type="button"
+              onClick={() => selectOp(op)}
+              className={`
+                h-10 rounded-xl text-lg font-bold font-mono transition-all duration-200
+                ${selectedOp === op ? opSelectedClass : btnClass}
+              `}
+            >
+              {opSymbol(op)}
+            </button>
+          )
+        })}
       </div>
 
       {/* History steps */}
       {history.length > 0 && (
-        <div className={`text-xs font-mono space-y-0.5 mb-2 ${isNeon ? 'text-cyan-400/60' : isRetro ? 'text-emerald-600/60' : isLightLike ? 'text-gray-500' : 'text-amber-300/50'}`}>
+        <div className={`text-xs font-mono space-y-0.5 mb-2 ${themeClass(theme, { light: 'text-gray-500', dark: 'text-amber-300/50', neon: 'text-cyan-400/60', retro: 'text-emerald-600/60' })}`}>
           {history.map((h, i) => (
             <div key={i} className="truncate">{h}</div>
           ))}

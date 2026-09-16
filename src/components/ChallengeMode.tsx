@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { themeClass, BTN_FUNCTION, BTN_AMBER_DARK } from '../utils/themeClasses'
 import { Analytics } from '../utils/analytics'
 
 interface ChallengeStats {
@@ -61,9 +62,33 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasStarted = useRef(false)
 
-  const isNeon = theme === 'neon'
-  const isRetro = theme === 'retro'
   const isLightLike = theme === 'light' || theme === 'retro'
+
+  const btnClassBase = themeClass(theme, BTN_FUNCTION)
+  const btnClass = btnClassBase === BTN_FUNCTION.dark
+    ? `glass-btn ${BTN_AMBER_DARK}`
+    : `glass-btn ${btnClassBase}`
+
+  const accentColor = themeClass(theme, {
+    light: 'text-purple-600',
+    dark: 'text-amber-300',
+    neon: 'text-cyan-300',
+    retro: 'text-emerald-600',
+  })
+
+  const bgAccent = themeClass(theme, {
+    light: 'bg-purple-50',
+    dark: 'bg-amber-500/8',
+    neon: 'bg-cyan-500/10',
+    retro: 'bg-emerald-100',
+  })
+
+  const inputClass = themeClass(theme, {
+    light: 'bg-white/60 border border-white/60 text-gray-900 placeholder-gray-400 focus:border-purple-400',
+    dark: 'bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-amber-400/50',
+    neon: 'bg-white/5 border border-white/10 text-cyan-100 placeholder-gray-500 focus:border-cyan-400/50',
+    retro: 'bg-emerald-50 border border-emerald-200 text-emerald-900 placeholder-emerald-400 focus:border-emerald-500',
+  })
 
   const saveStats = useCallback((s: ChallengeStats) => {
     localStorage.setItem('calc-challenge-stats', JSON.stringify(s))
@@ -188,26 +213,6 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
     }
   }, [handleSubmit])
 
-  const btnClass = isNeon
-    ? 'glass-btn-function-neon'
-    : isRetro
-      ? 'glass-btn-function-retro'
-      : isLightLike
-        ? 'glass-btn-function-light'
-        : 'glass-btn amber-btn-dark'
-
-  const accentColor = isNeon ? 'text-cyan-300' : isRetro ? 'text-emerald-600' : isLightLike ? 'text-purple-600' : 'text-amber-300'
-  const bgAccent = isNeon ? 'bg-cyan-500/10' : isRetro ? 'bg-emerald-100' : isLightLike ? 'bg-purple-50' : 'bg-amber-500/8'
-  const inputDark = 'bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-amber-400/50'
-  const inputLight = 'bg-white/60 border border-white/60 text-gray-900 placeholder-gray-400 focus:border-purple-400'
-  const inputClass = isNeon
-    ? 'bg-white/5 border border-white/10 text-cyan-100 placeholder-gray-500 focus:border-cyan-400/50'
-    : isRetro
-      ? 'bg-emerald-50 border border-emerald-200 text-emerald-900 placeholder-emerald-400 focus:border-emerald-500'
-      : isLightLike
-        ? inputLight
-        : inputDark
-
   // Auto-start game on mount (App handles the wrapper visibility)
   useEffect(() => {
     if (!hasStarted.current) {
@@ -244,7 +249,7 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
         <button
           type="button"
           onClick={startGame}
-          className="mt-4 py-2 px-6 rounded-full text-sm font-bold transition-all duration-200 glass-btn ${btnClass}"
+          className={`mt-4 py-2 px-6 rounded-full text-sm font-bold transition-all duration-200 ${btnClass}`}
         >
           再来一局
         </button>

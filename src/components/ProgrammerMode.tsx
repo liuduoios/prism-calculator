@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { themeClass, BTN_FUNCTION, GLASS_DISPLAY, LABEL_TEXT, BASE_TEXT } from '../utils/themeClasses'
 import type { CalculatorAction } from '../reducer/calculatorReducer'
 
 interface ProgrammerModeProps {
@@ -37,40 +38,16 @@ export default function ProgrammerMode({ displayValue, dispatch }: ProgrammerMod
   const oct = useMemo(() => toOct(num), [num])
   const hex = useMemo(() => toHex(num), [num])
 
-  const isNeon = theme === 'neon'
-  const isRetro = theme === 'retro'
-  const isLightLike = theme === 'light' || theme === 'retro'
-
-  const baseClass = isNeon
-    ? 'glass-display-neon text-cyan-300'
-    : isRetro
-      ? 'glass-display-retro text-emerald-900'
-      : isLightLike
-        ? 'glass-display-light text-gray-800'
-        : 'glass-display-dark text-gray-300'
-
-  const labelClass = isNeon
-    ? 'text-cyan-500/60'
-    : isRetro
-      ? 'text-emerald-600/50'
-      : isLightLike
-        ? 'text-gray-400'
-        : 'text-gray-500'
-
-  const btnClass = isNeon
-    ? 'glass-btn-function-neon'
-    : isRetro
-      ? 'glass-btn-function-retro'
-      : isLightLike
-        ? 'glass-btn-function-light'
-        : 'glass-btn-function-dark'
+  const baseClass = `glass-display ${themeClass(theme, GLASS_DISPLAY)} ${themeClass(theme, BASE_TEXT)}`
+  const labelClass = themeClass(theme, LABEL_TEXT)
+  const btnClass = `glass-btn ${themeClass(theme, BTN_FUNCTION)}`
 
   return (
     <div className="mb-4">
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className={`w-full flex items-center justify-center gap-2 py-1.5 px-4 mb-1 rounded-full text-xs font-semibold tracking-wider transition-all duration-300 glass-btn ${btnClass}`}
+        className={`w-full flex items-center justify-center gap-2 py-1.5 px-4 mb-1 rounded-full text-xs font-semibold tracking-wider transition-all duration-300 ${btnClass}`}
       >
         <span>💻</span>
         <span>{expanded ? '收起程序员模式' : '程序员模式'}</span>
