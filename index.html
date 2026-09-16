@@ -21,5 +21,13 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!--
+      CyanCode Analytics 埋点。
+      src 用相对路径 /t.js 走同站反代 —— 第一方路径不会被广告拦截器盯上,
+      而第三方域名 + collect/analytics 这类词是规则库的高频目标。
+      注:GA4 保留并行跑一段,用来交叉验证新埋点的数字。
+    -->
+    <script src="/t.js" data-project="prism-calculator" defer></script>
   </body>
 </html>

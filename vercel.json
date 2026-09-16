@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/t.js",
+      "destination": "https://s.cyancodestudio.com/t.js"
+    },
+    {
+      "source": "/_n",
+      "destination": "https://s.cyancodestudio.com/api/collect"
+    }
+  ]
+}
