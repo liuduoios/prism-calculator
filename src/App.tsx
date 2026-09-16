@@ -12,22 +12,33 @@ function CalculatorContent() {
   const [state, dispatch] = useReducer(calculatorReducer, initialState)
   useKeyboard(dispatch)
 
-  const lightGradient = 'bg-gradient-to-br from-gray-100 via-gray-50 to-blue-50'
-  const darkGradient = 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800'
-  const lightCard = 'bg-white/80 backdrop-blur-xl border border-white/50 shadow-gray-200/50'
-  const darkCard = 'bg-gray-900/80 backdrop-blur-xl border border-gray-700/50 shadow-black/30'
-  const headerBar = theme === 'light'
-    ? 'bg-white/60 backdrop-blur-md border-b border-gray-200/50'
-    : 'bg-gray-900/60 backdrop-blur-md border-b border-gray-700/50'
-  const footerText = theme === 'light' ? 'text-gray-400' : 'text-gray-500'
+  const isLight = theme === 'light'
 
   return (
-    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${theme === 'light' ? lightGradient : darkGradient}`}>
+    <div className={`min-h-screen flex flex-col transition-all duration-500 relative overflow-hidden
+      ${isLight
+        ? 'bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50'
+        : 'bg-gradient-to-br from-gray-950 via-slate-900 to-gray-900'
+      }`}
+    >
+      {/* Floating background orbs */}
+      <div className="orb orb-1" />
+      <div className="orb orb-2" />
+      <div className="orb orb-3" />
+      <div className="orb orb-4" />
+
       {/* Header */}
-      <header className={`sticky top-0 z-10 px-6 py-3 flex items-center justify-between ${headerBar}`}>
+      <header className={`relative z-10 px-6 py-4 flex items-center justify-between
+        ${isLight
+          ? 'bg-white/40 backdrop-blur-md border-b border-white/40'
+          : 'bg-gray-900/40 backdrop-blur-md border-b border-white/5'
+        }`}
+      >
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🧮</span>
-          <span className={`text-lg font-bold tracking-tight ${theme === 'light' ? 'text-gray-800' : 'text-white'}`}>
+          <span className="text-2xl drop-shadow-lg">🧮</span>
+          <span className={`text-xl font-bold tracking-tight font-display
+            ${isLight ? 'text-gray-800' : 'text-white'}`}
+          >
             精美计算器
           </span>
         </div>
@@ -35,16 +46,29 @@ function CalculatorContent() {
       </header>
 
       {/* Main */}
-      <main className="flex-1 flex items-center justify-center p-4">
-        <div className="flex gap-4 w-full max-w-[960px] justify-center h-[80vh] max-h-[750px]">
-          <div className={`w-full max-w-[420px] flex flex-col p-5 rounded-3xl shadow-2xl transition-all duration-300 ${theme === 'light' ? lightCard : darkCard}`}>
+      <main className="relative z-10 flex-1 flex items-center justify-center p-4 md:p-6">
+        <div className="flex gap-5 w-full max-w-[960px] justify-center">
+          {/* Calculator Card */}
+          <div className={`
+            w-full max-w-[420px] flex flex-col p-6
+            glass-card
+            ${isLight ? 'glass-card-light' : 'glass-card-dark'}
+            hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]
+          `}>
             <Display
               displayValue={state.displayValue}
               expression={state.expression}
             />
             <Keypad dispatch={dispatch} />
           </div>
-          <div className={`hidden lg:flex flex-col w-72 rounded-3xl p-5 shadow-2xl transition-all duration-300 ${theme === 'light' ? lightCard : darkCard}`}>
+
+          {/* History Panel */}
+          <div className={`
+            hidden lg:flex flex-col w-72 p-6
+            glass-card
+            ${isLight ? 'glass-card-light' : 'glass-card-dark'}
+            hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]
+          `}>
             <History
               history={state.history}
               onSelect={(item) => dispatch({ type: 'SELECT_HISTORY', item })}
@@ -55,8 +79,10 @@ function CalculatorContent() {
       </main>
 
       {/* Footer */}
-      <footer className={`py-4 text-center text-sm ${footerText}`}>
-        <p>&copy; {new Date().getFullYear()} 精美计算器 &mdash; 使用 React + TypeScript + Tailwind CSS 构建</p>
+      <footer className={`relative z-10 py-4 text-center text-xs font-medium tracking-wide
+        ${isLight ? 'text-purple-300/70' : 'text-gray-600'}`}
+      >
+        <p>&copy; {new Date().getFullYear()} 精美计算器 &mdash; Glassmorphism Design</p>
       </footer>
     </div>
   )
