@@ -62,8 +62,6 @@ export default function ChallengeMode({ onBack }: ChallengeModeProps) {
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasStarted = useRef(false)
 
-  const isLightLike = theme === 'light' || theme === 'retro'
-
   const btnClassBase = themeClass(theme, BTN_FUNCTION)
   const btnClass = btnClassBase === BTN_FUNCTION.dark
     ? `glass-btn ${BTN_AMBER_DARK}`

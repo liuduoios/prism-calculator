@@ -144,14 +144,10 @@ export default function TwentyFourGame({ onBack }: TwentyFourGameProps) {
   const messageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasStarted = useRef(false)
 
-  const isLightLike = theme === 'light' || theme === 'retro'
-
   const btnClassBase = themeClass(theme, BTN_FUNCTION)
   const btnClass = btnClassBase === BTN_FUNCTION.dark
     ? `glass-btn ${BTN_AMBER_DARK}`
     : `glass-btn ${btnClassBase}`
-
-  const numClass = `glass-btn ${themeClass(theme, BTN_NUMBER)}`
 
   const bgCard = themeClass(theme, {
     light: 'bg-purple-50/60',

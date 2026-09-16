@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useTranslation, langOrder, langLabel } from '../context/LanguageContext'
 import { useTheme } from '../context/ThemeContext'
-import { themeClass, HEADER_TEXT } from '../utils/themeClasses'
 
 export default function LanguageToggle() {
   const { lang, setLang } = useTranslation()
